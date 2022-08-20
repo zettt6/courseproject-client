@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
-import { Toaster } from 'react-hot-toast'
+import toast, { Toaster } from 'react-hot-toast'
 import { AppContext } from './context'
 import Collection from './pages/Collection'
 import Main from './pages/Main'
@@ -9,6 +9,7 @@ import Profile from './pages/Profile'
 import Navbar from './components/Header/Navbar'
 import { ProtectedRoute } from './outlets/ProtectedRoute'
 import './App.css'
+import axios from 'axios'
 
 function App() {
   const [userData, setUserData] = useState(null)
@@ -34,8 +35,26 @@ function App() {
   })
 
   useEffect(() => {
-    // запрос на проверку авторизации при перезагрузке стр
+    checkAuth()
   }, [])
+
+  const checkAuth = async () => {
+    try {
+      const token = localStorage.getItem('token')
+
+      if (token) {
+        const response = await axios.get('/user/checkauth', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        setUserData(response.data)
+      }
+    } catch (err) {
+      localStorage.removeItem('token')
+      toast.error(err.response.data.message)
+    }
+  }
 
   return (
     <div className='App'>
