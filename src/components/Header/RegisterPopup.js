@@ -1,26 +1,38 @@
-import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Grid, Paper, TextField, Button, Typography } from '@mui/material'
-import axios from 'axios'
+import React, { useContext } from 'react'
+import {
+  TextField,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from '@mui/material'
+
+import toast from 'react-hot-toast'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { emailRegex } from '../utils/validation'
+import { emailRegex } from '../../utils/validation'
+import axios from 'axios'
+import { AppContext } from '../../context'
 
-export default function Register() {
-  const navigate = useNavigate()
+export default function RegisterPopup({
+  registerPopupIsOpen,
+  toggleRegisterPopup,
+}) {
+  const appContext = useContext(AppContext)
 
-  async function registerUser(values) {
+  const registerUser = async (values) => {
     try {
-      const response = await axios.post('/app/register', {
+      const response = await axios.post('/user/register', {
         username: values.username,
         email: values.email,
         password: values.password,
       })
-
       localStorage.setItem('token', response.data.token)
-      navigate('/main')
+      appContext.setUserData(response.data.user)
+      toggleRegisterPopup()
     } catch (err) {
-      console.error(err.response.data.message)
+      toast.error(err.response.data.message)
     }
   }
 
@@ -39,19 +51,19 @@ export default function Register() {
   })
 
   return (
-    <Grid>
-      <Paper
-        elevation={15}
-        sx={{
-          padding: 3,
-          height: 'max-content',
-          width: 280,
-          margin: '30px auto',
-          borderTop: '10px solid #af52bf',
-          borderRadius: '15px',
-          boxShadow: '0px 0px 12px 1px rgb(0,0,0,0.4)',
-        }}
-      >
+    <Dialog
+      open={registerPopupIsOpen}
+      onClose={toggleRegisterPopup}
+      sx={{
+        width: '520px',
+        height: '450px',
+        margin: '0 auto',
+        padding: 3,
+        borderRadius: '15px',
+      }}
+    >
+      <DialogTitle>Sign up</DialogTitle>
+      <DialogContent>
         <TextField
           sx={{ my: 1 }}
           name='username'
@@ -93,25 +105,19 @@ export default function Register() {
           error={!!formik.errors.password && !!formik.touched.password}
           helperText={!!formik.touched.password && formik.errors.password}
         />
+      </DialogContent>
+      <DialogActions>
         <Button
           onClick={formik.handleSubmit}
           color='primary'
           variant='contained'
           sx={{
-            my: 2,
+            m: 2,
           }}
-          fullWidth
         >
           Sign up
         </Button>
-
-        <Grid align='center'>
-          <Typography>
-            Do you have an account?
-            <br /> <Link to='/'>Sign In</Link>
-          </Typography>
-        </Grid>
-      </Paper>
-    </Grid>
+      </DialogActions>
+    </Dialog>
   )
 }
