@@ -17,9 +17,10 @@ export default function LanguageControl() {
     <Select
       sx={{
         m: 0.5,
-        minWidth: '70px',
-        color: '#c5c5c6',
+        minWidth: '50px',
+        color: 'inherit',
       }}
+      variant='standard'
       open={open}
       onClose={toggleLanguage}
       onOpen={toggleLanguage}

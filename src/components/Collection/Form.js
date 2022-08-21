@@ -47,8 +47,12 @@ export default function CollectionForm({
         onChange={formik.handleChange}
         sx={{ my: 0.5, width: '200px' }}
       />
-      <Button onClick={formik.handleSubmit}>Create collection</Button>
-      <Button onClick={deleteCollections}>Delete collections</Button>
+      <Button color='inherit' onClick={formik.handleSubmit}>
+        Create collection
+      </Button>
+      <Button color='inherit' onClick={deleteCollections}>
+        Delete collections
+      </Button>
     </FormControl>
   )
 }

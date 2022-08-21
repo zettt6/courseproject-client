@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import toast, { Toaster } from 'react-hot-toast'
@@ -10,29 +10,43 @@ import Navbar from './components/Header/Navbar'
 import { ProtectedRoute } from './outlets/ProtectedRoute'
 import './App.css'
 import axios from 'axios'
+import { CssBaseline, Switch } from '@mui/material'
 
 function App() {
   const [userData, setUserData] = useState(null)
   const [collections, setCollections] = useState([])
+  const [mode, setMode] = useState('light')
 
-  const theme = createTheme({
+  const darkTheme = createTheme({
     palette: {
+      type: 'dark',
+      background: {
+        default: '#1a1a1a',
+      },
       primary: {
         main: '#202020',
         contrastText: '#c5c5c6',
       },
       secondary: {
-        main: '#c5c5c6',
+        main: '#fff',
       },
-      text: {
-        primary: '#1a1a1a',
-        secondary: '#c5c5c6',
-      },
-    },
-    typography: {
-      fontFamily: ['Lato', 'sans-serif'].join(','),
     },
   })
+
+  const lightTheme = createTheme({
+    palette: {
+      type: 'light',
+      background: {
+        default: '#e5e5e5',
+      },
+      primary: {
+        main: '#d3d3d3',
+        contrastText: '#666666',
+      },
+    },
+  })
+
+  const selectedTheme = mode === 'dark' ? darkTheme : lightTheme
 
   useEffect(() => {
     checkAuth()
@@ -64,14 +78,17 @@ function App() {
           setUserData,
           collections,
           setCollections,
+          mode,
+          setMode,
         }}
       >
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={selectedTheme}>
           <Toaster
             position='bottom-right'
             containerStyle={{ fontFamily: 'Lato' }}
           />
           <BrowserRouter>
+            <CssBaseline />
             <Navbar />
             <Routes>
               <Route exact path='/' element={<Main />} />

@@ -1,24 +1,16 @@
-import { DarkMode, LightMode } from '@mui/icons-material'
-import { IconButton } from '@mui/material'
-import React, { useState } from 'react'
+import { Switch } from '@mui/material'
+import React, { useContext } from 'react'
+import { AppContext } from '../../context'
 
 export default function ModeControl() {
-  const [mode, setMode] = useState('light')
+  const appContext = useContext(AppContext)
 
-  const changeMode = () => {
-    if (mode === 'light') {
-      setMode('dark')
-    } else setMode('light')
-  }
   return (
-    <IconButton
-      aria-label='account of current user'
-      aria-controls='menu-appbar'
-      aria-haspopup='true'
-      onClick={changeMode}
-      color='inherit'
-    >
-      {mode === 'dark' ? <LightMode /> : <DarkMode />}
-    </IconButton>
+    <Switch
+      color='secondary'
+      onChange={() =>
+        appContext.setMode(appContext.mode === 'light' ? 'dark' : 'light')
+      }
+    />
   )
 }
