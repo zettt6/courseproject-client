@@ -6,7 +6,6 @@ import {
   DeleteOutline,
   PersonOffOutlined,
   PersonOutline,
-  StarBorderOutlined,
 } from '@mui/icons-material'
 import toast from 'react-hot-toast'
 import axios from 'axios'

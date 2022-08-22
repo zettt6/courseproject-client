@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AppContext } from '../context'
+import { Box } from '@mui/system'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { Box } from '@mui/system'
 import Card from '../components/Collection/Card'
 import Form from '../components/Collection/Form'
 
@@ -25,22 +25,6 @@ export default function Profile() {
     }
   }
 
-  const createCollection = async (values) => {
-    try {
-      const response = await axios.post('/collection', {
-        title: values.title,
-        description: values.description,
-        subject: values.subject,
-      })
-    } catch (err) {
-      toast.error(err.response.data.message)
-    }
-  }
-
-  const deleteCollections = async () => {
-    console.log(selectedCollections)
-  }
-
   const goToCollectionPage = () => {
     console.log(1)
     // navigate(`/collection/:${id}`)
@@ -58,10 +42,7 @@ export default function Profile() {
         my: 2,
       }}
     >
-      <Form
-        createCollection={createCollection}
-        deleteCollections={deleteCollections}
-      />
+      <Form />
       <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
         {appContext.collections.map((collection) => (
           <Card

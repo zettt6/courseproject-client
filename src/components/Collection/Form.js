@@ -1,12 +1,28 @@
 import { Button, FormControl, TextField } from '@mui/material'
+import axios from 'axios'
 import { useFormik } from 'formik'
 import React from 'react'
+import toast from 'react-hot-toast'
 import * as Yup from 'yup'
+import InputTag from './InputTag'
 
-export default function CollectionForm({
-  createCollection,
-  deleteCollections,
-}) {
+export default function CollectionForm() {
+  const createCollection = async (values) => {
+    try {
+      const response = await axios.post('/collection', {
+        title: values.title,
+        description: values.description,
+        subject: values.subject,
+      })
+    } catch (err) {
+      toast.error(err.response.data.message)
+    }
+  }
+
+  const deleteCollections = async () => {
+    // console.log(selectedCollections)
+  }
+
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -47,6 +63,7 @@ export default function CollectionForm({
         onChange={formik.handleChange}
         sx={{ my: 0.5, width: '200px' }}
       />
+      <InputTag />
       <Button color='inherit' onClick={formik.handleSubmit}>
         Create collection
       </Button>
