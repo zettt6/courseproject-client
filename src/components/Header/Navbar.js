@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { AppBar, Box, Button, IconButton, Toolbar } from '@mui/material'
-import { AccountCircle, Logout } from '@mui/icons-material'
+import { AccountCircle, Logout, Settings } from '@mui/icons-material'
 import { SearchAppBar } from './SearchAppBar'
 import { useNavigate } from 'react-router-dom'
 import AuthPopup from './AuthPopup'
@@ -22,6 +22,10 @@ export default function Navbar() {
 
   const goToMainPage = () => {
     navigate('/')
+  }
+
+  const goToUsersPage = () => {
+    navigate('/users')
   }
 
   const logout = () => {
@@ -62,7 +66,6 @@ export default function Navbar() {
         {appContext.userData ? (
           <Box>
             <IconButton
-              aria-label='account of current user'
               aria-controls='menu-appbar'
               aria-haspopup='true'
               onClick={goToProfilePage}
@@ -70,8 +73,19 @@ export default function Navbar() {
             >
               <AccountCircle />
             </IconButton>
+
+            {appContext.userData.role === 'ADMIN' && (
+              <IconButton
+                aria-controls='menu-appbar'
+                aria-haspopup='true'
+                onClick={goToUsersPage}
+                color='inherit'
+              >
+                <Settings />
+              </IconButton>
+            )}
+
             <IconButton
-              aria-label='logout'
               aria-controls='menu-appbar'
               aria-haspopup='true'
               onClick={logout}

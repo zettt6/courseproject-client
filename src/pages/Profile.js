@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { AppContext } from '../context'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { Paper } from '@mui/material'
 import { Box } from '@mui/system'
 import Card from '../components/Collection/Card'
 import Form from '../components/Collection/Form'
@@ -42,41 +41,39 @@ export default function Profile() {
     console.log(selectedCollections)
   }
 
-  const goToCollectionPage = (id) => {
+  const goToCollectionPage = () => {
     console.log(1)
     // navigate(`/collection/:${id}`)
     navigate('/collection')
   }
 
   return (
-    <Box>
-      <Paper
-        sx={{
-          width: '900px',
-          margin: '0 auto',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          my: 2,
-        }}
-      >
-        <Form
-          createCollection={createCollection}
-          deleteCollections={deleteCollections}
-        />
-        <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-          {appContext.collections.map((collection) => (
-            <Card
-              title={collection.title}
-              description={collection.description}
-              subject={collection.subject}
-              key={collection._id}
-              // onClick={goToCollectionPage(collection._id)}
-              goToCollectionPage={goToCollectionPage}
-            />
-          ))}
-        </Box>
-      </Paper>
+    <Box
+      sx={{
+        width: '70vw',
+        margin: '0 auto',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        my: 2,
+      }}
+    >
+      <Form
+        createCollection={createCollection}
+        deleteCollections={deleteCollections}
+      />
+      <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+        {appContext.collections.map((collection) => (
+          <Card
+            title={collection.title}
+            description={collection.description}
+            subject={collection.subject}
+            key={collection._id}
+            // onClick={goToCollectionPage(collection._id)}
+            goToCollectionPage={goToCollectionPage}
+          />
+        ))}
+      </Box>
     </Box>
   )
 }

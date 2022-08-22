@@ -1,16 +1,19 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { ThemeProvider, createTheme } from '@mui/material/styles'
-import toast, { Toaster } from 'react-hot-toast'
+import { ProtectedRoute } from './outlets/ProtectedRoute'
 import { AppContext } from './context'
+
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
+import toast, { Toaster } from 'react-hot-toast'
+
+import Navbar from './components/Header/Navbar'
 import Collection from './pages/Collection'
 import Main from './pages/Main'
 import Profile from './pages/Profile'
-import Navbar from './components/Header/Navbar'
-import { ProtectedRoute } from './outlets/ProtectedRoute'
-import './App.css'
+import Users from './pages/Users'
+
 import axios from 'axios'
-import { CssBaseline, Switch } from '@mui/material'
+import './App.css'
 
 function App() {
   const [userData, setUserData] = useState(null)
@@ -55,7 +58,6 @@ function App() {
   const checkAuth = async () => {
     try {
       const token = localStorage.getItem('token')
-
       if (token) {
         const response = await axios.get('/user/checkauth', {
           headers: {
@@ -98,6 +100,18 @@ function App() {
                 element={
                   <ProtectedRoute isAllowed={!!userData} redirectPath='/'>
                     <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                exact
+                path='/users'
+                element={
+                  <ProtectedRoute
+                    isAllowed={!!userData && userData.role === 'ADMIN'}
+                    redirectPath='/'
+                  >
+                    <Users />
                   </ProtectedRoute>
                 }
               />
