@@ -136,7 +136,6 @@ export default function Users() {
   }
 
   const columns = [
-    { field: '_id', headerName: 'ID' },
     { field: 'username', headerName: 'username', width: 200 },
     { field: 'email', headerName: 'email', width: 200 },
     { field: 'status', headerName: 'status', width: 150 },

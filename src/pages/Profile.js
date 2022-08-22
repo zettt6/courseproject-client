@@ -6,6 +6,7 @@ import axios from 'axios'
 import toast from 'react-hot-toast'
 import Card from '../components/Collection/Card'
 import Form from '../components/Collection/Form'
+import UploadImage from '../components/Collection/UploadImage'
 
 export default function Profile() {
   const [selectedCollections, setSelectedCollections] = useState([])
@@ -25,10 +26,10 @@ export default function Profile() {
     }
   }
 
-  const goToCollectionPage = () => {
+  const goToItemPage = () => {
     console.log(1)
     // navigate(`/collection/:${id}`)
-    navigate('/collection')
+    navigate('/item')
   }
 
   return (
@@ -43,6 +44,7 @@ export default function Profile() {
       }}
     >
       <Form />
+      <UploadImage />
       <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
         {appContext.collections.map((collection) => (
           <Card
@@ -51,7 +53,7 @@ export default function Profile() {
             subject={collection.subject}
             key={collection._id}
             // onClick={goToCollectionPage(collection._id)}
-            goToCollectionPage={goToCollectionPage}
+            goToCollectionPage={goToItemPage}
           />
         ))}
       </Box>
