@@ -17,6 +17,7 @@ function App() {
   const [userData, setUserData] = useState(null)
   const [collections, setCollections] = useState([])
   const [mode, setMode] = useState('light')
+  const [initialized, setInitialized] = useState(false)
 
   const darkTheme = createTheme({
     palette: {
@@ -67,8 +68,12 @@ function App() {
     } catch (err) {
       localStorage.removeItem('token')
       toast.error(err.response.data.message)
+    } finally {
+      setInitialized(true)
     }
   }
+
+  if (!initialized) return ''
 
   return (
     <div className='App'>
