@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Button, IconButton, Stack } from '@mui/material'
 import { FileDownload } from '@mui/icons-material'
-import { Image } from 'cloudinary-react'
 
 export default function UploadImage() {
   const [image, setImage] = useState('')
@@ -37,7 +36,7 @@ export default function UploadImage() {
       <Button variant='contained' component='label' onClick={uploadImage}>
         Upload
       </Button>
-      <Image cloudName='dlhxpkqbh' publicId={url} />
+      <img alt='img' src={url} />
     </Stack>
   )
 }
