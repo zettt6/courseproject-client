@@ -17,7 +17,7 @@ import { AppContext } from '../../context'
 export default function AuthPopup({ authPopupIsOpen, toggleAuthPopup }) {
   const appContext = useContext(AppContext)
 
-  const loginUser = async (values) => {
+  const onSubmit = async (values) => {
     try {
       const response = await axios.post(`/user/login`, {
         email: values.email,
@@ -26,8 +26,8 @@ export default function AuthPopup({ authPopupIsOpen, toggleAuthPopup }) {
       localStorage.setItem('token', response.data.token)
       appContext.setUserData(response.data.user)
       toggleAuthPopup()
-    } catch (err) {
-      toast.error(err.response.data.message)
+    } catch (e) {
+      toast.error(e.response.data.message)
     }
   }
 
@@ -40,7 +40,7 @@ export default function AuthPopup({ authPopupIsOpen, toggleAuthPopup }) {
       email: Yup.string().required().matches(emailRegex, 'Invalid email'),
       password: Yup.string().required(),
     }),
-    onSubmit: loginUser,
+    onSubmit,
   })
 
   return (

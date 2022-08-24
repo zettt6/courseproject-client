@@ -9,10 +9,10 @@ export default function InputTag() {
   const addTags = async () => {
     try {
       return axios.put('/items/tags/', {
-        tags: tags,
+        tags,
       })
-    } catch (err) {
-      toast.error(err.response.data.message)
+    } catch (e) {
+      toast.error(e.response.data.message)
     }
   }
 
@@ -26,7 +26,7 @@ export default function InputTag() {
   }
 
   return (
-    <Stack spacing={3} sx={{ width: 200 }}>
+    <Stack spacing={3}>
       <Autocomplete
         multiple
         id='tags-outlined'

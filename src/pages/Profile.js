@@ -1,17 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { AppContext } from '../context'
 import { Box } from '@mui/system'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import Card from '../components/Collection/Card'
-import Form from '../components/Collection/Form'
-import UploadImage from '../components/Collection/UploadImage'
+import CollectionForm from '../components/Collection/CollectionForm'
+import { AppContext } from '../context'
 
 export default function Profile() {
+  const [collections, setCollections] = useState([])
   const [selectedCollections, setSelectedCollections] = useState([])
   const appContext = useContext(AppContext)
-  const navigate = useNavigate()
 
   useEffect(() => {
     getCollections()
@@ -19,17 +17,15 @@ export default function Profile() {
 
   const getCollections = async () => {
     try {
-      const response = await axios.get('/collection')
-      appContext.setCollections(response.data)
-    } catch (err) {
-      toast.error(err.response.data.message)
+      const response = await axios.get('/collections', {
+        params: {
+          creatorId: appContext.userData._id,
+        },
+      })
+      setCollections(response.data)
+    } catch (e) {
+      toast.error(e.response.data.message)
     }
-  }
-
-  const goToItemPage = () => {
-    console.log(1)
-    // navigate(`/collection/:${id}`)
-    navigate('/item')
   }
 
   return (
@@ -43,17 +39,15 @@ export default function Profile() {
         my: 2,
       }}
     >
-      <Form />
-      <UploadImage />
+      <CollectionForm getCollections={getCollections} />
       <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-        {appContext.collections.map((collection) => (
+        {collections.map((collection) => (
           <Card
             title={collection.title}
             description={collection.description}
             subject={collection.subject}
             key={collection._id}
-            // onClick={goToCollectionPage(collection._id)}
-            goToCollectionPage={goToItemPage}
+            collectionId={collection._id}
           />
         ))}
       </Box>

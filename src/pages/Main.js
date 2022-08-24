@@ -1,31 +1,23 @@
 import { Box } from '@mui/material'
 import axios from 'axios'
-import React, { useContext, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { AppContext } from '../context'
 import Card from '../components/Collection/Card'
-import { useNavigate } from 'react-router-dom'
 
 export default function Main() {
-  const appContext = useContext(AppContext)
-  const navigate = useNavigate()
+  const [biggestCollections, setBiggestCollections] = useState([])
 
   useEffect(() => {
-    getCollections()
+    getTheBiggestCollections()
   }, [])
 
-  const getCollections = async () => {
+  const getTheBiggestCollections = async () => {
     try {
-      const response = await axios.get('/collection')
-      appContext.setCollections(response.data)
-    } catch (err) {
-      toast.error(err.response.data.message)
+      const response = await axios.get('/collections/limit')
+      setBiggestCollections(response.data)
+    } catch (e) {
+      toast.error(e.response.data.message)
     }
-  }
-
-  const goToCollectionPage = () => {
-    // navigate(`/collection/:${id}`)
-    navigate('/collection')
   }
 
   return (
@@ -40,14 +32,13 @@ export default function Main() {
       }}
     >
       <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-        {appContext.collections.map((collection) => (
+        {biggestCollections.map((collection) => (
           <Card
             title={collection.title}
             description={collection.description}
             subject={collection.subject}
             key={collection._id}
-            // onClick={goToCollectionPage(collection._id)}
-            goToCollectionPage={goToCollectionPage}
+            collectionId={collection._id}
           />
         ))}
       </Box>

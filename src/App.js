@@ -2,22 +2,46 @@ import { useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ProtectedRoute } from './outlets/ProtectedRoute'
 import { AppContext } from './context'
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
+import { CssBaseline, ThemeProvider, createTheme, Box } from '@mui/material'
 import toast, { Toaster } from 'react-hot-toast'
 import Navbar from './components/Header/Navbar'
-import Item from './pages/Item'
+import Collection from './pages/Collection'
 import Main from './pages/Main'
 import Profile from './pages/Profile'
 import Users from './pages/Users'
-
 import axios from 'axios'
-import './App.css'
+import Item from './pages/Item'
 
 function App() {
   const [userData, setUserData] = useState(null)
-  const [collections, setCollections] = useState([])
-  const [mode, setMode] = useState('light')
+  const [theme, setTheme] = useState('light')
   const [initialized, setInitialized] = useState(false)
+
+  useEffect(() => {
+    checkAuth()
+    if (localStorage.getItem('theme')) {
+      setTheme(localStorage.getItem('theme'))
+    }
+  }, [])
+
+  const checkAuth = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      if (token) {
+        const response = await axios.get('/user/checkauth', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        setUserData(response.data)
+      }
+    } catch (e) {
+      localStorage.removeItem('token')
+      toast.error(e.response.data.message)
+    } finally {
+      setInitialized(true)
+    }
+  }
 
   const darkTheme = createTheme({
     palette: {
@@ -48,46 +72,19 @@ function App() {
     },
   })
 
-  const selectedTheme = mode === 'dark' ? darkTheme : lightTheme
-
-  useEffect(() => {
-    checkAuth()
-  }, [])
-
-  const checkAuth = async () => {
-    try {
-      const token = localStorage.getItem('token')
-      if (token) {
-        const response = await axios.get('/user/checkauth', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        setUserData(response.data)
-      }
-    } catch (err) {
-      localStorage.removeItem('token')
-      toast.error(err.response.data.message)
-    } finally {
-      setInitialized(true)
-    }
-  }
-
   if (!initialized) return ''
 
   return (
-    <div className='App'>
+    <Box sx={{ m: 0, p: 0 }}>
       <AppContext.Provider
         value={{
           userData,
           setUserData,
-          collections,
-          setCollections,
-          mode,
-          setMode,
+          theme,
+          setTheme,
         }}
       >
-        <ThemeProvider theme={selectedTheme}>
+        <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
           <Toaster
             position='bottom-right'
             containerStyle={{ fontFamily: 'Lato' }}
@@ -97,6 +94,8 @@ function App() {
             <Navbar />
             <Routes>
               <Route exact path='/' element={<Main />} />
+              <Route exact path='/collection/:id' element={<Collection />} />
+              <Route exact path='/item/:id' element={<Item />} />
               <Route
                 exact
                 path='/profile'
@@ -118,12 +117,11 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route exact path='/item' element={<Item />} />
             </Routes>
           </BrowserRouter>
         </ThemeProvider>
       </AppContext.Provider>
-    </div>
+    </Box>
   )
 }
 

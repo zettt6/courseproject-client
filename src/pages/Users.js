@@ -28,9 +28,9 @@ export default function Users() {
         },
       })
       setUsersData(response.data)
-    } catch (err) {
+    } catch (e) {
       navigate('/')
-      toast.error(err.response.data.message)
+      toast.error(e.response.data.message)
     }
   }
 
@@ -44,8 +44,8 @@ export default function Users() {
             Authorization: `Bearer ${token}`,
           },
         })
-      } catch (err) {
-        toast.error(err.response.data.message)
+      } catch (e) {
+        toast.error(e.response.data.message)
       }
     })
     Promise.all(requests).then(() => {
@@ -54,7 +54,6 @@ export default function Users() {
   }
 
   async function blockUsers() {
-    console.log(1)
     const token = localStorage.getItem('token')
     const requests = selectedUsers.map((user) => {
       try {
@@ -63,8 +62,8 @@ export default function Users() {
             Authorization: `Bearer ${token}`,
           },
         })
-      } catch (err) {
-        toast.error(err.response.data.message)
+      } catch (e) {
+        toast.error(e.response.data.message)
       }
     })
     Promise.all(requests).then(() => {
@@ -82,8 +81,8 @@ export default function Users() {
             Authorization: `Bearer ${token}`,
           },
         })
-      } catch (err) {
-        toast.error(err.response.data.message)
+      } catch (e) {
+        toast.error(e.response.data.message)
       }
     })
     Promise.all(requests).then(() => {
@@ -101,8 +100,8 @@ export default function Users() {
             Authorization: `Bearer ${token}`,
           },
         })
-      } catch (err) {
-        toast.error(err.response.data.message)
+      } catch (e) {
+        toast.error(e.response.data.message)
       }
     })
     Promise.all(requests).then(() => {
@@ -120,8 +119,8 @@ export default function Users() {
             Authorization: `Bearer ${token}`,
           },
         })
-      } catch (err) {
-        toast.error(err.response.data.message)
+      } catch (e) {
+        toast.error(e.response.data.message)
       }
     })
     Promise.all(requests).then(() => {

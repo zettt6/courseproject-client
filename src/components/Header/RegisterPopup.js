@@ -21,7 +21,7 @@ export default function RegisterPopup({
 }) {
   const appContext = useContext(AppContext)
 
-  const registerUser = async (values) => {
+  const onSubmit = async (values) => {
     try {
       const response = await axios.post('/user/register', {
         username: values.username,
@@ -31,8 +31,8 @@ export default function RegisterPopup({
       localStorage.setItem('token', response.data.token)
       appContext.setUserData(response.data.user)
       toggleRegisterPopup()
-    } catch (err) {
-      toast.error(err.response.data.message)
+    } catch (e) {
+      toast.error(e.response.data.message)
     }
   }
 
@@ -47,7 +47,7 @@ export default function RegisterPopup({
       username: Yup.string().required(),
       password: Yup.string().required(),
     }),
-    onSubmit: registerUser,
+    onSubmit,
   })
 
   return (

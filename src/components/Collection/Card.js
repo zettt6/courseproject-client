@@ -8,13 +8,20 @@ import {
   Typography,
 } from '@mui/material'
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export default function CollectionCard({
   title,
   description,
   subject,
-  goToCollectionPage,
+  collectionId,
 }) {
+  const navigate = useNavigate()
+
+  const goToCollectionPage = () => {
+    navigate(`/collection/${collectionId}`)
+  }
+
   return (
     <Card
       sx={{

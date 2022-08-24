@@ -44,12 +44,9 @@ export default function Navbar() {
   return (
     <AppBar position='static'>
       <Toolbar sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-        {appContext.userData && (
-          <Button color='inherit' onClick={goToMainPage}>
-            Main page
-          </Button>
-        )}
-
+        <Button color='inherit' onClick={goToMainPage}>
+          collections
+        </Button>
         <Box
           sx={{
             display: {
