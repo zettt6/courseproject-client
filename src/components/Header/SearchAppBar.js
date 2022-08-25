@@ -12,7 +12,7 @@ export function SearchAppBar() {
     borderRadius: '40px',
     '&:hover': {
       backgroundColor:
-        appContext.mode === 'light'
+        appContext.theme === 'light'
           ? theme.palette.primary.light
           : theme.palette.primary.dark,
     },

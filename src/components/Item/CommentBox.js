@@ -12,7 +12,7 @@ export default function CommentBox({ item, getItem }) {
   const appContext = useContext(AppContext)
   const { id } = useParams()
 
-  const handleChange = (e) => {
+  const handleInput = (e) => {
     setInputValue(e.target.value)
   }
 
@@ -47,26 +47,31 @@ export default function CommentBox({ item, getItem }) {
       {item.comments.map((comment) => {
         return <Comment author={comment.author} text={comment.text} />
       })}
-      <TextField
-        multiline
-        maxRows={2}
-        value={inputValue}
-        onChange={handleChange}
-        placeholder='Add a comment...'
-        variant='standard'
-        fullWidth
-      />
-      <Box sx={{ marginLeft: 'auto' }}>
-        <Button
-          variant='contained'
-          color='inherit'
-          sx={{ m: 1 }}
-          endIcon={<SendIcon />}
-          onClick={sendComment}
-        >
-          Send
-        </Button>
-      </Box>
+
+      {appContext.userData && (
+        <Box>
+          <TextField
+            multiline
+            maxRows={2}
+            value={inputValue}
+            onChange={handleInput}
+            placeholder='Add a comment...'
+            variant='standard'
+            fullWidth
+          />
+          <Box sx={{ marginLeft: 'auto' }}>
+            <Button
+              variant='contained'
+              color='inherit'
+              sx={{ m: 1 }}
+              endIcon={<SendIcon />}
+              onClick={sendComment}
+            >
+              Send
+            </Button>
+          </Box>
+        </Box>
+      )}
     </Box>
   )
 }

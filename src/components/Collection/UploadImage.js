@@ -29,7 +29,7 @@ export default function UploadImage() {
 
   return (
     <Stack direction='row' alignItems='center' spacing={1}>
-      <IconButton aria-label='upload picture' component='label'>
+      <IconButton aria-label='upload img' component='label'>
         <input hidden accept='image/*' type='file' onChange={handleInput} />
         <FileDownload />
       </IconButton>

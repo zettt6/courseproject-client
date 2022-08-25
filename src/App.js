@@ -94,10 +94,13 @@ function App() {
             <Navbar />
             <Routes>
               <Route exact path='/' element={<Main />} />
-              <Route exact path='/collection/:id' element={<Collection />} />
-              <Route exact path='/item/:id' element={<Item />} />
+              <Route exact path='/collections/:id' element={<Collection />} />
               <Route
                 exact
+                path='/collections/:id/items/:itemId'
+                element={<Item />}
+              />
+              <Route
                 path='/profile'
                 element={
                   <ProtectedRoute isAllowed={!!userData} redirectPath='/'>
@@ -106,7 +109,6 @@ function App() {
                 }
               />
               <Route
-                exact
                 path='/users'
                 element={
                   <ProtectedRoute

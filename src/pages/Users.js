@@ -39,7 +39,7 @@ export default function Users() {
 
     const requests = selectedUsers.map((selectedUser) => {
       try {
-        return axios.delete(`/admin/users/delete/${selectedUser._id}`, {
+        return axios.delete(`/admin/users/delete/:${selectedUser._id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -95,7 +95,7 @@ export default function Users() {
 
     const requests = selectedUsers.map((user) => {
       try {
-        return axios.put(`/admin/users/giverights/${user._id}`, null, {
+        return axios.put(`/admin/users/give-rights/${user._id}`, null, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -114,7 +114,7 @@ export default function Users() {
 
     const requests = selectedUsers.map((user) => {
       try {
-        return axios.put(`/admin/users/revokerights/${user._id}`, null, {
+        return axios.put(`/admin/users/revoke-rights/${user._id}`, null, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

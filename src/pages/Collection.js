@@ -116,7 +116,7 @@ export default function Collection() {
   }
 
   const goToItemPage = (row) => {
-    navigate(`/item/${row.id}`)
+    navigate(`/collections/:${id}/items/${row.id}`)
   }
 
   return (

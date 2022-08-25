@@ -7,7 +7,7 @@ import CommentBox from '../components/Item/CommentBox'
 
 export default function Item() {
   const [item, setItem] = useState([])
-  const { id } = useParams()
+  const { itemId } = useParams()
 
   useEffect(() => {
     getItem()
@@ -15,9 +15,8 @@ export default function Item() {
 
   const getItem = async () => {
     try {
-      const response = await axios.get(`/items/${id}`)
+      const response = await axios.get(`/items/${itemId}`)
       setItem(response.data)
-      console.log(response.data)
     } catch (e) {
       toast.error(e.response.data.message)
     }
