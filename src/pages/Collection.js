@@ -23,7 +23,8 @@ export default function Collection() {
 
   const getCollection = async () => {
     try {
-      await axios.get(`/collections/${id}`)
+      const response = await axios.get(`/collections/${id}`)
+      console.log(response.data)
     } catch (e) {
       toast.error(e.response.data.message)
     }

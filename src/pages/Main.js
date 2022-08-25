@@ -17,7 +17,6 @@ export default function Main() {
     try {
       const response = await axios.get('/collections/limit')
       setBiggestCollections(response.data)
-      console.log(response.data)
     } catch (e) {
       toast.error(e.response.data.message)
     }

@@ -23,11 +23,14 @@ export default function ItemFormPopup({
   const appContext = useContext(AppContext)
 
   const onSubmit = async (values) => {
+    const tags = ['tag', 'tag']
+
     try {
-      const response = axios.post('/items', {
+      const response = await axios.post('/items', {
         title: values.title,
         creatorId: appContext.userData._id,
         collectionId: collectionId,
+        tags: tags,
       })
     } catch (e) {
       toast.error(e.response.data.message)

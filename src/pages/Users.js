@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Button, Grid, IconButton } from '@mui/material'
+import { Button, Grid, IconButton, SvgIcon } from '@mui/material'
 import { DataGrid, GridToolbarContainer } from '@mui/x-data-grid'
 import {
   DeleteOutline,
@@ -9,6 +9,8 @@ import {
 } from '@mui/icons-material'
 import toast from 'react-hot-toast'
 import axios from 'axios'
+import { ReactComponent as block } from '../icons/block.svg'
+import { ReactComponent as unblock } from '../icons/unblock.svg'
 
 export default function Users() {
   const [usersData, setUsersData] = useState([])
@@ -36,96 +38,100 @@ export default function Users() {
 
   async function deleteUsers() {
     const token = localStorage.getItem('token')
+    let queryParams = ''
+    selectedUsers.forEach((user) => (queryParams += `users[]=${user._id}&`))
 
-    const requests = selectedUsers.map((selectedUser) => {
-      try {
-        return axios.delete(`/admin/users/delete/:${selectedUser._id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-      } catch (e) {
-        toast.error(e.response.data.message)
-      }
-    })
-    Promise.all(requests).then(() => {
-      getUsers()
-    })
+    try {
+      await axios.delete(`/admin/users/delete?${queryParams}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+    } catch (e) {
+      toast.error(e.response.data.message)
+    }
+
+    getUsers()
   }
 
   async function blockUsers() {
     const token = localStorage.getItem('token')
-    const requests = selectedUsers.map((user) => {
-      try {
-        return axios.put(`/admin/users/block/${user._id}`, null, {
+    try {
+      await axios.put(
+        `/admin/users/block`,
+        {
+          users: selectedUsers,
+        },
+        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
-      } catch (e) {
-        toast.error(e.response.data.message)
-      }
-    })
-    Promise.all(requests).then(() => {
-      getUsers()
-    })
+        }
+      )
+    } catch (e) {
+      toast.error(e.response.data.message)
+    }
+    getUsers()
   }
 
   async function unblockUsers() {
     const token = localStorage.getItem('token')
-
-    const requests = selectedUsers.map((user) => {
-      try {
-        return axios.put(`/admin/users/unblock/${user._id}`, null, {
+    try {
+      await axios.put(
+        `/admin/users/unblock`,
+        {
+          users: selectedUsers,
+        },
+        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
-      } catch (e) {
-        toast.error(e.response.data.message)
-      }
-    })
-    Promise.all(requests).then(() => {
-      getUsers()
-    })
+        }
+      )
+    } catch (e) {
+      toast.error(e.response.data.message)
+    }
+    getUsers()
   }
 
   async function giveAdminRights() {
     const token = localStorage.getItem('token')
-
-    const requests = selectedUsers.map((user) => {
-      try {
-        return axios.put(`/admin/users/give-rights/${user._id}`, null, {
+    try {
+      await axios.put(
+        `/admin/users/give-rights`,
+        {
+          users: selectedUsers,
+        },
+        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
-      } catch (e) {
-        toast.error(e.response.data.message)
-      }
-    })
-    Promise.all(requests).then(() => {
-      getUsers()
-    })
+        }
+      )
+    } catch (e) {
+      toast.error(e.response.data.message)
+    }
+    getUsers()
   }
 
   async function revokeAdminRights() {
     const token = localStorage.getItem('token')
-
-    const requests = selectedUsers.map((user) => {
-      try {
-        return axios.put(`/admin/users/revoke-rights/${user._id}`, null, {
+    try {
+      await axios.put(
+        `/admin/users/revoke-rights`,
+        {
+          users: selectedUsers,
+        },
+        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        })
-      } catch (e) {
-        toast.error(e.response.data.message)
-      }
-    })
-    Promise.all(requests).then(() => {
-      getUsers()
-    })
+        }
+      )
+    } catch (e) {
+      toast.error(e.response.data.message)
+    }
+    getUsers()
   }
 
   const handleRowSelection = (id) => {
@@ -144,6 +150,26 @@ export default function Users() {
   const GridToolBar = () => {
     return (
       <GridToolbarContainer>
+        <SvgIcon
+          component={block}
+          inheritViewBox
+          sx={{
+            m: 1,
+            cursor: 'pointer',
+            ':hover': { backgroundColor: '#ebebeb82', borderRadius: '5px' },
+          }}
+          onClick={blockUsers}
+        />
+        <SvgIcon
+          component={unblock}
+          inheritViewBox
+          sx={{
+            m: 1,
+            cursor: 'pointer',
+            ':hover': { backgroundColor: '#ebebeb82', borderRadius: '5px' },
+          }}
+          onClick={unblockUsers}
+        />
         <IconButton
           aria-controls='menu-appbar'
           aria-haspopup='true'
@@ -154,24 +180,6 @@ export default function Users() {
           <DeleteOutline />
         </IconButton>
 
-        <IconButton
-          aria-controls='menu-appbar'
-          aria-haspopup='true'
-          aria-label='unblock'
-          color='inherit'
-          onClick={blockUsers}
-        >
-          <PersonOffOutlined />
-        </IconButton>
-        <IconButton
-          aria-controls='menu-appbar'
-          aria-haspopup='true'
-          aria-label='block'
-          color='inherit'
-          onClick={unblockUsers}
-        >
-          <PersonOutline />
-        </IconButton>
         <Button color='inherit' onClick={giveAdminRights}>
           give admin rights
         </Button>

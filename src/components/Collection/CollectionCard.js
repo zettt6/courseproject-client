@@ -46,9 +46,8 @@ export default function CollectionCard({
 
   const StyledCard = styled(Card)(({ theme }) => ({
     width: '300px',
-    height: '460px',
     margin: '10px',
-    padding: '10px',
+    padding: '12px',
     borderRadius: '20px',
     backgroundColor: appContext.theme === 'light' ? '#d2d2d2' : '#4c4c4c',
     '&:hover': {
@@ -63,27 +62,29 @@ export default function CollectionCard({
 
   return (
     <StyledCard onClick={goToCollectionPage}>
-      <CardHeader
-        action={
-          <>
-            {collectionIsChecked && (
-              <Button color='inherit' onClick={deleteCollections}>
-                delete
-              </Button>
-            )}
-            <Checkbox
-              inputProps={{ 'aria-label': 'controlled' }}
-              checked={collectionIsChecked}
-              onClick={handleCollectionIsChecked}
-            />
-          </>
-        }
-      />
+      {appContext.userData && (
+        <CardHeader
+          action={
+            <>
+              {collectionIsChecked && (
+                <Button color='inherit' onClick={deleteCollections}>
+                  delete
+                </Button>
+              )}
+              <Checkbox
+                inputProps={{ 'aria-label': 'controlled' }}
+                checked={collectionIsChecked}
+                onClick={handleCollectionIsChecked}
+              />
+            </>
+          }
+        />
+      )}
       <CardMedia
         sx={{ borderRadius: '10px' }}
         component='img'
-        height='200'
-        width='300'
+        height='200px'
+        width='100px'
         image={image ? image : noimg}
         alt='collection image'
       />
@@ -97,6 +98,7 @@ export default function CollectionCard({
 
       <CardActions>
         <Checkbox
+          sx={{ marginLeft: 'auto' }}
           inputProps={{ 'aria-label': 'controlled' }}
           icon={<FavoriteBorder />}
           checkedIcon={<Favorite />}
