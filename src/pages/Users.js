@@ -15,6 +15,7 @@ import { ReactComponent as unblock } from '../icons/unblock.svg'
 export default function Users() {
   const [usersData, setUsersData] = useState([])
   const [selectedUsers, setSelectedUsers] = useState([])
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -34,9 +35,11 @@ export default function Users() {
       navigate('/')
       toast.error(e.response.data.message)
     }
+    setLoading(false)
   }
 
   async function deleteUsers() {
+    setLoading(true)
     const token = localStorage.getItem('token')
     let queryParams = ''
     selectedUsers.forEach((user) => (queryParams += `users[]=${user._id}&`))
@@ -55,6 +58,8 @@ export default function Users() {
   }
 
   async function blockUsers() {
+    setLoading(true)
+
     const token = localStorage.getItem('token')
     try {
       await axios.put(
@@ -75,6 +80,8 @@ export default function Users() {
   }
 
   async function unblockUsers() {
+    setLoading(true)
+
     const token = localStorage.getItem('token')
     try {
       await axios.put(
@@ -95,6 +102,8 @@ export default function Users() {
   }
 
   async function giveAdminRights() {
+    setLoading(true)
+
     const token = localStorage.getItem('token')
     try {
       await axios.put(
@@ -115,6 +124,8 @@ export default function Users() {
   }
 
   async function revokeAdminRights() {
+    setLoading(true)
+
     const token = localStorage.getItem('token')
     try {
       await axios.put(
@@ -209,6 +220,7 @@ export default function Users() {
         columns={columns}
         pageSize={10}
         checkboxSelection
+        loading={loading}
       />
     </Grid>
   )

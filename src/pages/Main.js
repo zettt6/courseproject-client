@@ -24,23 +24,21 @@ export default function Main() {
 
   const deleteCollections = async (e) => {
     e.stopPropagation()
-
     const token = localStorage.getItem('token')
-
-    const requests = selectedCollections.map((selectedCollection) => {
-      try {
-        return axios.delete(`/collections/delete/${selectedCollection}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-      } catch (e) {
-        toast.error(e.response.data.message)
-      }
-    })
-    Promise.all(requests).then(() => {
-      getTheBiggestCollections()
-    })
+    let queryParams = ''
+    selectedCollections.forEach(
+      (collection) => (queryParams += `collections[]=${collection}&`)
+    )
+    try {
+      await axios.delete(`/collections/delete?${queryParams}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+    } catch (e) {
+      toast.error(e.response.data.message)
+    }
+    getTheBiggestCollections()
   }
 
   return (
