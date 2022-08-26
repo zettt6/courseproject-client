@@ -3,12 +3,16 @@ import { Box } from '@mui/system'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import CollectionCard from '../components/Collection/CollectionCard'
-import CollectionForm from '../components/Collection/CollectionForm'
+import CollectionFormPopup from '../components/Collection/CollectionFormPopup'
 import { AppContext } from '../context'
+import { Paper, Toolbar, Button, styled } from '@mui/material'
 
 export default function Profile() {
   const [collections, setCollections] = useState([])
   const [selectedCollections, setSelectedCollections] = useState([])
+  const [collectionIsChecked, setCollectionIsChecked] = useState(false)
+  const [collectionFormPopupIsOpen, setCollectionFormPopupIsOpen] =
+    useState(false)
 
   const appContext = useContext(AppContext)
 
@@ -31,22 +35,34 @@ export default function Profile() {
 
   const deleteCollections = async (e) => {
     e.stopPropagation()
-    const token = localStorage.getItem('token')
 
-    const requests = selectedCollections.map((selectedCollection) => {
-      try {
-        return axios.delete(`/collections/delete/:${selectedCollection}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-      } catch (e) {
-        toast.error(e.response.data.message)
-      }
-    })
-    Promise.all(requests).then(() => {
-      getCollections()
-    })
+    const token = localStorage.getItem('token')
+    let queryParams = ''
+    selectedCollections.forEach(
+      (collection) => (queryParams += `collections[]=${collection}&`)
+    )
+    try {
+      await axios.delete(`/collections/delete?${queryParams}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+    } catch (e) {
+      toast.error(e.response.data.message)
+    }
+    getCollections()
+  }
+
+  const StyledToolbar = styled(Toolbar)(() => ({
+    '@media all': {
+      minHeight: 30,
+    },
+    justifyContent: 'flex-end',
+    paddingBottom: '40px',
+  }))
+
+  function toggleCollectionFormPopup() {
+    setCollectionFormPopupIsOpen(!collectionFormPopupIsOpen)
   }
 
   return (
@@ -60,22 +76,40 @@ export default function Profile() {
         my: 2,
       }}
     >
-      <CollectionForm getCollections={getCollections} />
-      <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-        {collections.map((collection) => (
-          <CollectionCard
-            title={collection.title}
-            description={collection.description}
-            subject={collection.subject}
-            image={collection.image}
-            key={collection._id}
-            collectionId={collection._id}
+      <Paper sx={{ backgroundColor: 'inherit', p: 3, width: '70vw' }}>
+        <StyledToolbar>
+          <Button color='inherit' onClick={toggleCollectionFormPopup}>
+            create collection
+          </Button>
+          <CollectionFormPopup
+            collectionFormPopupIsOpen={collectionFormPopupIsOpen}
+            toggleCollectionFormPopup={toggleCollectionFormPopup}
             getCollections={getCollections}
-            setSelectedCollections={setSelectedCollections}
-            deleteCollections={deleteCollections}
           />
-        ))}
-      </Box>
+          {collectionIsChecked && (
+            <Button color='inherit' onClick={deleteCollections}>
+              delete
+            </Button>
+          )}
+        </StyledToolbar>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+          {collections.map((collection) => (
+            <CollectionCard
+              title={collection.title}
+              description={collection.description}
+              subject={collection.subject}
+              image={collection.image}
+              key={collection._id}
+              collectionId={collection._id}
+              getCollections={getCollections}
+              setSelectedCollections={setSelectedCollections}
+              deleteCollections={deleteCollections}
+              collectionIsChecked={collectionIsChecked}
+              setCollectionIsChecked={setCollectionIsChecked}
+            />
+          ))}
+        </Box>
+      </Paper>
     </Box>
   )
 }

@@ -5,7 +5,7 @@ import { SearchAppBar } from './SearchAppBar'
 import { useNavigate } from 'react-router-dom'
 import AuthPopup from './AuthPopup'
 import LanguageControl from './LanguageControl'
-import ModeControl from './ModeControl'
+import ThemeControl from './ThemeControl'
 import RegisterPopup from './RegisterPopup'
 import { AppContext } from '../../context'
 
@@ -62,7 +62,7 @@ export default function Navbar() {
           <SearchAppBar />
         </Box>
         <LanguageControl />
-        <ModeControl />
+        <ThemeControl />
 
         {appContext.userData ? (
           <Box>

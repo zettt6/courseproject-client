@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ProtectedRoute } from './outlets/ProtectedRoute'
 import { AppContext } from './context'
 import { CssBaseline, ThemeProvider, createTheme, Box } from '@mui/material'
+
 import toast, { Toaster } from 'react-hot-toast'
 import Navbar from './components/Header/Navbar'
 import Collection from './pages/Collection'

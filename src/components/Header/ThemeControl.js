@@ -4,7 +4,7 @@ import React, { useContext } from 'react'
 import toast from 'react-hot-toast'
 import { AppContext } from '../../context'
 
-export default function ModeControl() {
+export default function ThemeControl() {
   const appContext = useContext(AppContext)
 
   const changeTheme = async () => {

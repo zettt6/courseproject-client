@@ -1,26 +1,30 @@
-import { FileDownload } from '@mui/icons-material'
+import React, { useContext, useState } from 'react'
 import {
   Button,
-  FormControl,
-  IconButton,
-  Stack,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   TextField,
 } from '@mui/material'
+import { FileDownload } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
 import axios from 'axios'
 import { useFormik } from 'formik'
-import React, { useContext, useState } from 'react'
 import toast from 'react-hot-toast'
 import * as Yup from 'yup'
 import { AppContext } from '../../context'
-import ReactLoading from 'react-loading'
 
-export default function CollectionForm() {
+export default function CollectionFormPopup({
+  collectionFormPopupIsOpen,
+  toggleCollectionFormPopup,
+  getCollections,
+}) {
   const [loading, setLoading] = useState(false)
   const appContext = useContext(AppContext)
 
   const createCollection = async (values, imageUrl) => {
     const token = localStorage.getItem('token')
-
     try {
       return axios.post(
         '/collections',
@@ -60,7 +64,9 @@ export default function CollectionForm() {
     let uploadedImage
     if (values.image) uploadedImage = await uploadImage()
     createCollection(values, uploadedImage?.secure_url)
+    await getCollections()
     setLoading(false)
+    toggleCollectionFormPopup()
   }
 
   const handleInput = (e) => {
@@ -83,8 +89,17 @@ export default function CollectionForm() {
   })
 
   return (
-    <FormControl sx={{ m: 3, width: '400px' }}>
-      <Stack spacing={1}>
+    <Dialog
+      open={collectionFormPopupIsOpen}
+      onClose={toggleCollectionFormPopup}
+      sx={{
+        margin: '0 auto',
+        padding: 3,
+        borderRadius: '15px',
+      }}
+    >
+      <DialogTitle>Create new collection</DialogTitle>
+      <DialogContent>
         <TextField
           name='title'
           label='Title'
@@ -94,6 +109,7 @@ export default function CollectionForm() {
           onBlur={formik.handleBlur}
           error={!!formik.errors.title && !!formik.touched.title}
           helperText={!!formik.touched.title && formik.errors.title}
+          sx={{ my: 2 }}
         />
         <TextField
           name='description'
@@ -104,6 +120,7 @@ export default function CollectionForm() {
           onBlur={formik.handleBlur}
           error={!!formik.errors.description && !!formik.touched.description}
           helperText={!!formik.touched.description && formik.errors.description}
+          sx={{ my: 2 }}
         />
         <TextField
           name='subject'
@@ -114,35 +131,30 @@ export default function CollectionForm() {
           onBlur={formik.handleBlur}
           error={!!formik.errors.subject && !!formik.touched.subject}
           helperText={!!formik.touched.subject && formik.errors.subject}
+          sx={{ my: 2 }}
         />
-        <Stack direction='row' alignItems='center' spacing={1}>
-          <IconButton
-            sx={{ width: '140px', borderRadius: '20px', fontSize: '16px' }}
-            aria-label='upload img'
-            component='label'
-          >
-            <input hidden accept='image/*' type='file' onChange={handleInput} />
-            add image
-            <FileDownload />
-          </IconButton>
-          {loading && (
-            <ReactLoading
-              type='spin'
-              color='#7dd7ffde'
-              height={20}
-              width={20}
-            />
-          )}
-        </Stack>
+      </DialogContent>
+      <DialogActions>
         <Button
+          variant='contained'
           color='inherit'
-          variant='outlined'
+          sx={{ m: 1 }}
+          endIcon={<FileDownload />}
+          component='label'
+        >
+          <input hidden accept='image/*' type='file' onChange={handleInput} />
+          upload image
+        </Button>
+        <LoadingButton
+          loading={loading}
+          color='inherit'
+          variant='contained'
           sx={{ width: '200px' }}
           onClick={formik.handleSubmit}
         >
           create collection
-        </Button>
-      </Stack>
-    </FormControl>
+        </LoadingButton>
+      </DialogActions>
+    </Dialog>
   )
 }

@@ -13,7 +13,6 @@ export default function Main() {
   }, [])
 
   const getTheBiggestCollections = async () => {
-    // !
     try {
       const response = await axios.get('/collections/limit')
       setBiggestCollections(response.data)

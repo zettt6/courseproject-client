@@ -5,14 +5,13 @@ import React, {
   useMemo,
   useState,
 } from 'react'
-import { Button, Grid, IconButton } from '@mui/material'
+import { Button, Grid, Box } from '@mui/material'
 import {
   DataGrid,
   GridCellModes,
   GridToolbarContainer,
   GridToolbarFilterButton,
 } from '@mui/x-data-grid'
-import { DeleteOutline } from '@mui/icons-material'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import ItemFormPopup from '../components/Item/ItemFormPopup'
@@ -60,25 +59,26 @@ export default function Collection() {
   }
 
   async function deleteItems() {
-    setLoading(true)
-    const token = localStorage.getItem('token')
-    let queryParams = ''
-    selectedItems.forEach((item) => (queryParams += `items[]=${item._id}&`))
-    try {
-      await axios.delete(`/items/delete?${queryParams}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-    } catch (e) {
-      toast.error(e.response.data.message)
+    if (selectedItems.length) {
+      setLoading(true)
+      const token = localStorage.getItem('token')
+      let queryParams = ''
+      selectedItems.forEach((item) => (queryParams += `items[]=${item._id}&`))
+      try {
+        await axios.delete(`/items/delete?${queryParams}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      } catch (e) {
+        toast.error(e.response.data.message)
+      }
+      getItems()
     }
-    getItems()
   }
 
   async function updateItem(updatedRow) {
     setLoading(true)
-    console.log(updatedRow)
     const token = localStorage.getItem('token')
     try {
       await axios.put(
@@ -135,7 +135,6 @@ export default function Collection() {
             [field]: { mode: GridCellModes.View },
           },
         })
-        console.log(field)
       } else {
         setCellModesModel({
           ...cellModesModel,
@@ -161,51 +160,54 @@ export default function Collection() {
       })
     }
 
-    const handleMouseDown = (event) => {
-      event.preventDefault()
+    const handleMouseDown = (e) => {
+      e.preventDefault()
     }
 
-    if (!appContext.userData) return
     return (
-      <GridToolbarContainer>
-        <IconButton
-          aria-controls='menu-appbar'
-          aria-haspopup='true'
-          aria-label='delete'
-          color='inherit'
-          onClick={deleteItems}
-        >
-          <DeleteOutline />
-        </IconButton>
-        <GridToolbarFilterButton color='inherit' />
-        <Button
-          onClick={handleSaveOrEdit}
-          onMouseDown={handleMouseDown}
-          disabled={!selectedCellParams}
-          variant='outlined'
-          color='inherit'
-        >
-          {cellMode === 'edit' ? 'Save' : 'Edit'}
-        </Button>
-        <Button
-          onClick={handleCancel}
-          onMouseDown={handleMouseDown}
-          disabled={cellMode === 'view'}
-          variant='outlined'
-          color='inherit'
-          sx={{ ml: 1 }}
-        >
-          Cancel
-        </Button>
+      <GridToolbarContainer sx={{ justifyContent: 'space-between', m: 1 }}>
+        <Box>
+          <GridToolbarFilterButton color='inherit' />
+          <Button onClick={deleteItems} sx={{ mx: 1 }} color='inherit'>
+            delete
+          </Button>
+          <Button
+            onClick={handleSaveOrEdit}
+            onMouseDown={handleMouseDown}
+            disabled={!selectedCellParams}
+            color='inherit'
+            sx={{ mx: 1 }}
+          >
+            {cellMode === 'edit' ? 'Save' : 'Edit'}
+          </Button>
+          <Button
+            onClick={handleCancel}
+            onMouseDown={handleMouseDown}
+            disabled={cellMode === 'view'}
+            color='inherit'
+          >
+            Cancel
+          </Button>
+        </Box>
+        <Box>
+          <Button color='inherit' sx={{ mx: 1 }} onClick={toggleItemFormPopup}>
+            Create new item
+          </Button>
+          <ItemFormPopup
+            itemFormPopupIsOpen={itemFormPopupIsOpen}
+            toggleItemFormPopup={toggleItemFormPopup}
+            getItems={getItems}
+            collectionId={id}
+          />
+        </Box>
       </GridToolbarContainer>
     )
   }
 
-  const handleCellFocus = useCallback((event) => {
+  const handleCellFocus = useCallback((event, params) => {
     const row = event.currentTarget.parentElement
     const id = row.dataset.id
     const field = event.currentTarget.dataset.field
-    console.log(field)
     setSelectedCellParams({ id, field })
   }, [])
 
@@ -234,25 +236,6 @@ export default function Collection() {
 
   return (
     <Grid align='center'>
-      {appContext.userData && (
-        <>
-          <ItemFormPopup
-            itemFormPopupIsOpen={itemFormPopupIsOpen}
-            toggleItemFormPopup={toggleItemFormPopup}
-            getItems={getItems}
-            collectionId={id}
-          />
-          <Button
-            color='inherit'
-            variant='outlined'
-            sx={{ width: '200px', m: 2 }}
-            onClick={toggleItemFormPopup}
-          >
-            Create new item
-          </Button>
-        </>
-      )}
-
       <DataGrid
         onRowDoubleClick={goToItemPage}
         onSelectionModelChange={handleRowSelection}

@@ -2,11 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button, Grid, IconButton, SvgIcon } from '@mui/material'
 import { DataGrid, GridToolbarContainer } from '@mui/x-data-grid'
-import {
-  DeleteOutline,
-  PersonOffOutlined,
-  PersonOutline,
-} from '@mui/icons-material'
+import { DeleteOutline } from '@mui/icons-material'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import { ReactComponent as block } from '../icons/block.svg'

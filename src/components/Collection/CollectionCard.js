@@ -1,5 +1,6 @@
-import { Favorite, FavoriteBorder } from '@mui/icons-material'
+import { Favorite, FavoriteBorder, ModeEditOutline } from '@mui/icons-material'
 import {
+  Box,
   Button,
   Card,
   CardActions,
@@ -7,6 +8,7 @@ import {
   CardHeader,
   CardMedia,
   Checkbox,
+  IconButton,
   styled,
   Typography,
 } from '@mui/material'
@@ -23,9 +25,12 @@ export default function CollectionCard({
   image,
   setSelectedCollections,
   deleteCollections,
+  collectionIsChecked,
+  setCollectionIsChecked,
 }) {
+  // like/on hover edit mode
   const [liked, setLiked] = useState(false)
-  const [collectionIsChecked, setCollectionIsChecked] = useState(false)
+  const [editMode, setEditMode] = useState(false)
   const navigate = useNavigate()
   const appContext = useContext(AppContext)
 
@@ -58,28 +63,43 @@ export default function CollectionCard({
           : '1px 0px 14px 0px rgba(255,255,255,0.6)',
       backgroundColor: appContext.theme === 'light' ? '#ffffff3b' : '#6b6b6b',
     },
+    '&:hover .MuiCardHeader-root': {
+      opacity: 1,
+    },
   }))
+
+  const editCollection = (e) => {
+    console.log(1)
+    e.stopPropagation()
+    // setEditMode(true)
+  }
 
   return (
     <StyledCard onClick={goToCollectionPage}>
-      {appContext.userData && (
-        <CardHeader
-          action={
-            <>
-              {collectionIsChecked && (
-                <Button color='inherit' onClick={deleteCollections}>
-                  delete
-                </Button>
-              )}
-              <Checkbox
-                inputProps={{ 'aria-label': 'controlled' }}
-                checked={collectionIsChecked}
-                onClick={handleCollectionIsChecked}
-              />
-            </>
-          }
-        />
-      )}
+      <CardHeader
+        sx={{ opacity: 0 }}
+        action={
+          <>
+            {appContext.userData && (
+              <IconButton
+                edge='end'
+                aria-controls='menu-appbar'
+                aria-haspopup='true'
+                // onClick={editCollection}
+              >
+                <ModeEditOutline />
+              </IconButton>
+            )}
+            <Checkbox
+              edge='end'
+              inputProps={{ 'aria-label': 'controlled' }}
+              checked={collectionIsChecked}
+              onClick={handleCollectionIsChecked}
+            />
+          </>
+        }
+      />
+
       <CardMedia
         sx={{ borderRadius: '10px' }}
         component='img'
@@ -88,6 +108,7 @@ export default function CollectionCard({
         image={image ? image : noimg}
         alt='collection image'
       />
+
       <CardContent>
         <Typography gutterBottom variant='h5' component='div'>
           {title}
@@ -98,6 +119,7 @@ export default function CollectionCard({
 
       <CardActions>
         <Checkbox
+          edge='end'
           sx={{ marginLeft: 'auto' }}
           inputProps={{ 'aria-label': 'controlled' }}
           icon={<FavoriteBorder />}
