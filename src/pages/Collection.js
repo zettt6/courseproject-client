@@ -14,7 +14,7 @@ import {
 } from '@mui/x-data-grid'
 import toast from 'react-hot-toast'
 import axios from 'axios'
-import ItemFormPopup from '../components/Item/ItemFormPopup'
+import Popup from '../components/Item/ItemForm/Popup'
 import { AppContext } from '../context'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -115,7 +115,7 @@ export default function Collection() {
   }
 
   const goToItemPage = (row) => {
-    navigate(`/collections/:${id}/items/${row.id}`)
+    navigate(`/collections/${id}/items/${row.id}`)
   }
 
   const GridToolBar = (props) => {
@@ -168,37 +168,50 @@ export default function Collection() {
       <GridToolbarContainer sx={{ justifyContent: 'space-between', m: 1 }}>
         <Box>
           <GridToolbarFilterButton color='inherit' />
-          <Button onClick={deleteItems} sx={{ mx: 1 }} color='inherit'>
-            delete
-          </Button>
-          <Button
-            onClick={handleSaveOrEdit}
-            onMouseDown={handleMouseDown}
-            disabled={!selectedCellParams}
-            color='inherit'
-            sx={{ mx: 1 }}
-          >
-            {cellMode === 'edit' ? 'Save' : 'Edit'}
-          </Button>
-          <Button
-            onClick={handleCancel}
-            onMouseDown={handleMouseDown}
-            disabled={cellMode === 'view'}
-            color='inherit'
-          >
-            Cancel
-          </Button>
+
+          {appContext.userData && (
+            <>
+              <Button onClick={deleteItems} sx={{ mx: 1 }} color='inherit'>
+                delete
+              </Button>
+              <Button
+                onClick={handleSaveOrEdit}
+                onMouseDown={handleMouseDown}
+                disabled={!selectedCellParams}
+                color='inherit'
+                sx={{ mx: 1 }}
+              >
+                {cellMode === 'edit' ? 'Save' : 'Edit'}
+              </Button>
+              <Button
+                onClick={handleCancel}
+                onMouseDown={handleMouseDown}
+                disabled={cellMode === 'view'}
+                color='inherit'
+              >
+                Cancel
+              </Button>
+            </>
+          )}
         </Box>
         <Box>
-          <Button color='inherit' sx={{ mx: 1 }} onClick={toggleItemFormPopup}>
-            Create new item
-          </Button>
-          <ItemFormPopup
-            itemFormPopupIsOpen={itemFormPopupIsOpen}
-            toggleItemFormPopup={toggleItemFormPopup}
-            getItems={getItems}
-            collectionId={id}
-          />
+          {appContext.userData && (
+            <>
+              <Button
+                color='inherit'
+                sx={{ mx: 1 }}
+                onClick={toggleItemFormPopup}
+              >
+                Create new item
+              </Button>
+              <Popup
+                itemFormPopupIsOpen={itemFormPopupIsOpen}
+                toggleItemFormPopup={toggleItemFormPopup}
+                getItems={getItems}
+                collectionId={id}
+              />
+            </>
+          )}
         </Box>
       </GridToolbarContainer>
     )
@@ -235,7 +248,7 @@ export default function Collection() {
   }
 
   return (
-    <Grid align='center'>
+    <Grid ml={'20vw'}>
       <DataGrid
         onRowDoubleClick={goToItemPage}
         onSelectionModelChange={handleRowSelection}

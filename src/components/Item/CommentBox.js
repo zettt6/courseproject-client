@@ -10,7 +10,7 @@ import toast from 'react-hot-toast'
 export default function CommentBox({ item, getItem }) {
   const [inputValue, setInputValue] = useState('')
   const appContext = useContext(AppContext)
-  const { id } = useParams()
+  const { itemId } = useParams()
 
   const handleInput = (e) => {
     setInputValue(e.target.value)
@@ -18,16 +18,23 @@ export default function CommentBox({ item, getItem }) {
 
   const sendComment = async () => {
     try {
-      return await axios.put('/items/comments', {
+      const response = await axios.put('/items/comments', {
         author: appContext.userData.username,
         text: inputValue,
-        itemId: id,
+        itemId: itemId,
       })
+      console.log(response.data)
     } catch (e) {
       toast.error(e.response.data.message)
     }
     setInputValue('')
     getItem()
+  }
+
+  const keyPress = (e) => {
+    if (e.keyCode === 13) {
+      sendComment()
+    }
   }
 
   if (!item.comments)
@@ -36,40 +43,45 @@ export default function CommentBox({ item, getItem }) {
   return (
     <Box
       sx={{
-        width: '70vw',
+        width: '60vw',
         display: 'flex',
         flexDirection: 'column',
+        mt: 5,
       }}
     >
-      <Typography variant='h6' sx={{ marginRight: 'auto' }}>
+      <Typography variant='h6' sx={{ marginRight: 'auto', my: 5 }}>
         Comments
       </Typography>
       {item.comments.map((comment) => {
-        return <Comment author={comment.author} text={comment.text} />
+        return (
+          <Comment
+            key={comment._id}
+            author={comment.author}
+            text={comment.text}
+          />
+        )
       })}
 
       {appContext.userData && (
-        <Box>
+        <Box mt={5}>
           <TextField
-            multiline
-            maxRows={2}
             value={inputValue}
+            onKeyDown={keyPress}
             onChange={handleInput}
             placeholder='Add a comment...'
             variant='standard'
             fullWidth
           />
-          <Box sx={{ marginLeft: 'auto' }}>
-            <Button
-              variant='contained'
-              color='inherit'
-              sx={{ m: 1 }}
-              endIcon={<SendIcon />}
-              onClick={sendComment}
-            >
-              Send
-            </Button>
-          </Box>
+
+          <Button
+            variant='contained'
+            color='inherit'
+            sx={{ width: '100px', my: 3 }}
+            endIcon={<SendIcon />}
+            onClick={sendComment}
+          >
+            Send
+          </Button>
         </Box>
       )}
     </Box>

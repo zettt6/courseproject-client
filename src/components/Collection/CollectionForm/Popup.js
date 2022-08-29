@@ -1,19 +1,25 @@
 import React, { useContext, useState } from 'react'
 import {
-  Button,
+  Box,
   Dialog,
   DialogActions,
   DialogContent,
+  DialogContentText,
   DialogTitle,
-  TextField,
+  IconButton,
 } from '@mui/material'
-import { FileDownload } from '@mui/icons-material'
+import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import axios from 'axios'
 import { useFormik } from 'formik'
 import toast from 'react-hot-toast'
 import * as Yup from 'yup'
-import { AppContext } from '../../context'
+import { AppContext } from '../../../context'
+
+import RequiredFieldForm from './RequiredFieldForm'
+import AdditionalFieldForm from './AdditionalFieldForm'
+import AdditionalFieldSelect from './AdditionalFieldSelect'
+import UploadImage from './UploadImage'
 
 export default function CollectionFormPopup({
   collectionFormPopupIsOpen,
@@ -21,6 +27,8 @@ export default function CollectionFormPopup({
   getCollections,
 }) {
   const [loading, setLoading] = useState(false)
+  const [selectedField, setSelectedField] = useState('')
+  const [additionalField, setAdditionalField] = useState([])
   const appContext = useContext(AppContext)
 
   const createCollection = async (values, imageUrl) => {
@@ -69,10 +77,6 @@ export default function CollectionFormPopup({
     toggleCollectionFormPopup()
   }
 
-  const handleInput = (e) => {
-    formik.setFieldValue('image', e.target.files[0])
-  }
-
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -84,9 +88,22 @@ export default function CollectionFormPopup({
       title: Yup.string().required(),
       description: Yup.string().required(),
       subject: Yup.string().required(),
+      fields: Yup.array().of(
+        Yup.object().shape({
+          name: Yup.string(),
+          number: Yup.number(),
+          date: Yup.date(),
+        })
+      ),
     }),
+
     onSubmit,
   })
+
+  const addFields = (e) => {
+    let newField = { type: selectedField, name: '', value: '' }
+    setAdditionalField([...additionalField, newField])
+  }
 
   return (
     <Dialog
@@ -94,60 +111,44 @@ export default function CollectionFormPopup({
       onClose={toggleCollectionFormPopup}
       sx={{
         margin: '0 auto',
-        padding: 3,
         borderRadius: '15px',
       }}
+      maxWidth={'xl'}
     >
       <DialogTitle>Create new collection</DialogTitle>
-      <DialogContent>
-        <TextField
-          name='title'
-          label='Title'
-          placeholder='Enter title'
-          value={formik.values.title}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={!!formik.errors.title && !!formik.touched.title}
-          helperText={!!formik.touched.title && formik.errors.title}
-          sx={{ my: 2 }}
-        />
-        <TextField
-          name='description'
-          label='Description'
-          placeholder='Enter description'
-          value={formik.values.description}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={!!formik.errors.description && !!formik.touched.description}
-          helperText={!!formik.touched.description && formik.errors.description}
-          sx={{ my: 2 }}
-        />
-        <TextField
-          name='subject'
-          label='Subject'
-          placeholder='Enter subject'
-          value={formik.values.subject}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={!!formik.errors.subject && !!formik.touched.subject}
-          helperText={!!formik.touched.subject && formik.errors.subject}
-          sx={{ my: 2 }}
-        />
+      <DialogContent sx={{ width: '50vw' }}>
+        <Box>
+          <RequiredFieldForm formik={formik} />
+          <Box
+            display={'flex'}
+            alignItems={'center'}
+            alignContent={'center'}
+            my={2}
+          >
+            <DialogContentText m={2}>
+              You can also add additional fields for items in this collection
+            </DialogContentText>
+            <AdditionalFieldSelect
+              selectedField={selectedField}
+              setSelectedField={setSelectedField}
+              additionalField={additionalField}
+            />
+            {selectedField && (
+              <IconButton onClick={addFields} sx={{ mx: 1 }} aria-label='add'>
+                <Add />
+              </IconButton>
+            )}
+          </Box>
+          <AdditionalFieldForm
+            additionalField={additionalField}
+            setAdditionalField={setAdditionalField}
+          />
+        </Box>
       </DialogContent>
       <DialogActions>
-        <Button
-          variant='contained'
-          color='inherit'
-          sx={{ m: 1 }}
-          endIcon={<FileDownload />}
-          component='label'
-        >
-          <input hidden accept='image/*' type='file' onChange={handleInput} />
-          upload image
-        </Button>
+        <UploadImage formik={formik} />
         <LoadingButton
           loading={loading}
-          color='inherit'
           variant='contained'
           sx={{ width: '200px' }}
           onClick={formik.handleSubmit}

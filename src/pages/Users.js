@@ -150,8 +150,8 @@ export default function Users() {
   const columns = [
     { field: 'username', headerName: 'username', width: 200 },
     { field: 'email', headerName: 'email', width: 200 },
-    { field: 'status', headerName: 'status', width: 150 },
-    { field: 'role', headerName: 'role', width: 150 },
+    { field: 'status', headerName: 'status', width: 200 },
+    { field: 'role', headerName: 'role', width: 200 },
   ]
 
   const GridToolBar = () => {
@@ -206,7 +206,7 @@ export default function Users() {
         }}
         sx={{
           height: '60vh',
-          width: '70vw',
+          width: '60vw',
           boxShadow: '0px 0px 12px 1px rgb(0,0,0,0.4)',
           my: 4,
         }}

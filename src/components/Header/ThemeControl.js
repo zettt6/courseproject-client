@@ -1,3 +1,4 @@
+import { LightMode, ModeNight } from '@mui/icons-material'
 import { Switch } from '@mui/material'
 import axios from 'axios'
 import React, { useContext } from 'react'
@@ -39,10 +40,18 @@ export default function ThemeControl() {
     appContext.theme === 'dark' || (appContext.theme === null && prefersDark)
 
   return (
-    <Switch
-      color='secondary'
-      defaultChecked={defaultCheck}
-      onChange={changeTheme}
-    />
+    <>
+      {appContext.theme === 'dark' ? (
+        <ModeNight sx={{ color: '#696969' }} />
+      ) : (
+        <LightMode sx={{ color: '#696969' }} />
+      )}
+      <Switch
+        sx={{ mx: 2.5 }}
+        color='secondary'
+        defaultChecked={defaultCheck}
+        onChange={changeTheme}
+      />
+    </>
   )
 }

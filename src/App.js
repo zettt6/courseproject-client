@@ -12,10 +12,14 @@ import Profile from './pages/Profile'
 import Users from './pages/Users'
 import axios from 'axios'
 import Item from './pages/Item'
+import Sidebar from './components/Sidebar'
+
+// search/tags/comments/likes/localization/collection and item create(fields?)
 
 function App() {
   const [userData, setUserData] = useState(null)
   const [theme, setTheme] = useState('light')
+
   const [initialized, setInitialized] = useState(false)
 
   useEffect(() => {
@@ -76,55 +80,54 @@ function App() {
   if (!initialized) return ''
 
   return (
-    <Box sx={{ m: 0, p: 0 }}>
-      <AppContext.Provider
-        value={{
-          userData,
-          setUserData,
-          theme,
-          setTheme,
-        }}
-      >
-        <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
-          <Toaster
-            position='bottom-right'
-            containerStyle={{ fontFamily: 'Lato' }}
-          />
-          <BrowserRouter>
-            <CssBaseline />
-            <Navbar />
-            <Routes>
-              <Route exact path='/' element={<Main />} />
-              <Route exact path='/collections/:id' element={<Collection />} />
-              <Route
-                exact
-                path='/collections/:id/items/:itemId'
-                element={<Item />}
-              />
-              <Route
-                path='/profile'
-                element={
-                  <ProtectedRoute isAllowed={!!userData} redirectPath='/'>
-                    <Profile />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path='/users'
-                element={
-                  <ProtectedRoute
-                    isAllowed={!!userData && userData.role === 'ADMIN'}
-                    redirectPath='/'
-                  >
-                    <Users />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
-          </BrowserRouter>
-        </ThemeProvider>
-      </AppContext.Provider>
-    </Box>
+    <AppContext.Provider
+      value={{
+        userData,
+        setUserData,
+        theme,
+        setTheme,
+      }}
+    >
+      <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme}>
+        <Toaster
+          position='bottom-right'
+          containerStyle={{ fontFamily: 'Lato' }}
+        />
+        <BrowserRouter>
+          <CssBaseline />
+          <Navbar />
+          <Sidebar />
+          <Routes>
+            <Route exact path='/' element={<Main />} />
+            <Route exact path='/collections/:id' element={<Collection />} />
+            <Route
+              exact
+              path='/collections/:id/items/:itemId'
+              element={<Item />}
+            />
+            <Route
+              path='/profile'
+              element={
+                <ProtectedRoute isAllowed={!!userData} redirectPath='/'>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='/users'
+              element={
+                <ProtectedRoute
+                  isAllowed={!!userData && userData.role === 'ADMIN'}
+                  redirectPath='/'
+                >
+                  <Users />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </BrowserRouter>
+      </ThemeProvider>
+    </AppContext.Provider>
   )
 }
 

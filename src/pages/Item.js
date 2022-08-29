@@ -28,6 +28,7 @@ export default function Item() {
         width: '70vw',
         display: 'flex',
         flexDirection: 'column',
+        ml: '20vw'
       }}
     >
       <CommentBox item={item} getItem={getItem} />

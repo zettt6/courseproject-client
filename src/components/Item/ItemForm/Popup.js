@@ -1,36 +1,39 @@
 import {
+  Autocomplete,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Stack,
   TextField,
 } from '@mui/material'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import axios from 'axios'
 import { useFormik } from 'formik'
 import toast from 'react-hot-toast'
 import * as Yup from 'yup'
-import InputTag from '../../components/Item/InputTag'
-import { AppContext } from '../../context'
+import InputTag from '../InputTag'
+import { AppContext } from '../../../context'
 
-export default function ItemFormPopup({
+export default function Popup({
   itemFormPopupIsOpen,
   toggleItemFormPopup,
   getItems,
   collectionId,
 }) {
+  const [tags, setTags] = useState([])
+  const [inputValue, setInputValue] = useState('')
+  const [selectedTags, setSelectedTags] = useState('')
   const appContext = useContext(AppContext)
 
   const onSubmit = async (values) => {
-    const tags = ['tag', 'tag']
-
     try {
       const response = await axios.post('/items', {
         title: values.title,
         creatorId: appContext.userData._id,
         collectionId: collectionId,
-        tags: tags,
+        tags: selectedTags,
       })
     } catch (e) {
       toast.error(e.response.data.message)
@@ -49,6 +52,16 @@ export default function ItemFormPopup({
     onSubmit,
   })
 
+  function handleKeyDown(e) {
+    if (e.key !== 'Enter') return
+    const value = e.target.value
+    if (!value.trim()) return
+    setTags([...tags, value])
+    e.target.value = ''
+  }
+
+  console.log(tags)
+  console.log(selectedTags)
   return (
     <Dialog
       open={itemFormPopupIsOpen}
@@ -71,7 +84,29 @@ export default function ItemFormPopup({
           onChange={formik.handleChange}
           sx={{ my: 2 }}
         />
-        <InputTag />
+        <Stack spacing={3}>
+          <Autocomplete
+            multiple
+            freeSolo
+            autoSelect
+            id='tags-outlined'
+            options={tags}
+            getOptionLabel={(option) => option}
+            filterSelectedOptions
+            onChange={(event, value) => setSelectedTags(value)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                placeholder='add tag'
+                onKeyDown={handleKeyDown}
+                onChange={({ target }) => {
+                  setInputValue(target.value)
+                }}
+                value={inputValue}
+              />
+            )}
+          />
+        </Stack>
       </DialogContent>
       <DialogActions>
         <Button

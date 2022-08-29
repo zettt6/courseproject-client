@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -6,7 +6,6 @@ import CollectionCard from '../components/Collection/CollectionCard'
 
 export default function Main() {
   const [biggestCollections, setBiggestCollections] = useState([])
-  const [selectedCollections, setSelectedCollections] = useState([])
 
   useEffect(() => {
     getTheBiggestCollections()
@@ -21,25 +20,6 @@ export default function Main() {
     }
   }
 
-  const deleteCollections = async (e) => {
-    e.stopPropagation()
-    const token = localStorage.getItem('token')
-    let queryParams = ''
-    selectedCollections.forEach(
-      (collection) => (queryParams += `collections[]=${collection}&`)
-    )
-    try {
-      await axios.delete(`/collections/delete?${queryParams}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-    } catch (e) {
-      toast.error(e.response.data.message)
-    }
-    getTheBiggestCollections()
-  }
-
   return (
     <Box
       sx={{
@@ -48,7 +28,8 @@ export default function Main() {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        my: 2,
+        my: 3,
+        ml: '20vw',
       }}
     >
       <Box
@@ -66,8 +47,6 @@ export default function Main() {
             key={collection._id}
             collectionId={collection._id}
             getCollection={getTheBiggestCollections}
-            setSelectedCollections={setSelectedCollections}
-            deleteCollections={deleteCollections}
           />
         ))}
       </Box>

@@ -10,12 +10,6 @@ export function SearchAppBar() {
   const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: '40px',
-    '&:hover': {
-      backgroundColor:
-        appContext.theme === 'light'
-          ? theme.palette.primary.light
-          : theme.palette.primary.dark,
-    },
     marginRight: '20px',
     width: '100%',
     [theme.breakpoints.up('sm')]: {

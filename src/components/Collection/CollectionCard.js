@@ -1,7 +1,6 @@
 import { Favorite, FavoriteBorder, ModeEditOutline } from '@mui/icons-material'
 import {
   Box,
-  Button,
   Card,
   CardActions,
   CardContent,
@@ -12,8 +11,10 @@ import {
   styled,
   Typography,
 } from '@mui/material'
-import React, { useContext, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import React, { useContext, useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { AppContext } from '../../context'
 import noimg from '../../icons/noimg.svg'
 
@@ -28,15 +29,33 @@ export default function CollectionCard({
   collectionIsChecked,
   setCollectionIsChecked,
 }) {
-  // like/on hover edit mode
-  const [liked, setLiked] = useState(false)
+  const [likeIconIsChecked, setLikeIconIsChecked] = useState(false)
+
   const [editMode, setEditMode] = useState(false)
   const navigate = useNavigate()
   const appContext = useContext(AppContext)
+  const location = useLocation()
 
-  const handleLiked = (e) => {
+  useEffect(() => {
+    if (appContext.userData && appContext.userData.likes.includes(collectionId))
+      setLikeIconIsChecked(true)
+  }, [])
+
+  const handleLiked = async (e) => {
     e.stopPropagation()
-    setLiked(e.target.checked)
+    setLikeIconIsChecked(e.target.checked)
+    await setLike()
+  }
+
+  const setLike = async () => {
+    try {
+      const response = await axios.post('/user/like', {
+        userId: appContext.userData._id,
+        collectionId: collectionId,
+      })
+    } catch (e) {
+      toast.error(e.response.data.message)
+    }
   }
 
   const handleCollectionIsChecked = (e) => {
@@ -69,36 +88,35 @@ export default function CollectionCard({
   }))
 
   const editCollection = (e) => {
-    console.log(1)
+    // !
     e.stopPropagation()
-    // setEditMode(true)
+    setEditMode(true)
   }
 
   return (
     <StyledCard onClick={goToCollectionPage}>
-      <CardHeader
-        sx={{ opacity: 0 }}
-        action={
-          <>
-            {appContext.userData && (
+      {appContext.userData && location.pathname === '/profile' && (
+        <CardHeader
+          sx={{ opacity: 0 }}
+          action={
+            <Box>
+              <Checkbox
+                edge='start'
+                checked={collectionIsChecked}
+                onClick={handleCollectionIsChecked}
+              />
               <IconButton
                 edge='end'
                 aria-controls='menu-appbar'
                 aria-haspopup='true'
-                // onClick={editCollection}
+                onClick={editCollection}
               >
                 <ModeEditOutline />
               </IconButton>
-            )}
-            <Checkbox
-              edge='end'
-              inputProps={{ 'aria-label': 'controlled' }}
-              checked={collectionIsChecked}
-              onClick={handleCollectionIsChecked}
-            />
-          </>
-        }
-      />
+            </Box>
+          }
+        />
+      )}
 
       <CardMedia
         sx={{ borderRadius: '10px' }}
@@ -116,18 +134,19 @@ export default function CollectionCard({
         <Typography variant='body3'>{subject}</Typography>
         <Typography variant='body2'>{description}</Typography>
       </CardContent>
-
-      <CardActions>
-        <Checkbox
-          edge='end'
-          sx={{ marginLeft: 'auto' }}
-          inputProps={{ 'aria-label': 'controlled' }}
-          icon={<FavoriteBorder />}
-          checkedIcon={<Favorite />}
-          checked={liked}
-          onClick={handleLiked}
-        />
-      </CardActions>
+      {appContext.userData && location.pathname !== '/profile' && (
+        <CardActions>
+          <Checkbox
+            edge='end'
+            sx={{ marginLeft: 'auto' }}
+            inputProps={{ 'aria-label': 'controlled' }}
+            icon={<FavoriteBorder />}
+            checkedIcon={<Favorite sx={{ color: '#696969' }} />}
+            checked={likeIconIsChecked}
+            onClick={handleLiked}
+          />
+        </CardActions>
+      )}
     </StyledCard>
   )
 }

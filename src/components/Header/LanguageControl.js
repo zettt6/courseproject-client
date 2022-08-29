@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Select, MenuItem } from '@mui/material'
 
 export default function LanguageControl() {
-  const [language, setLanguage] = useState('EN')
+  const [language, setLanguage] = useState('en')
   const [open, setOpen] = useState(false)
 
   const handleChange = (e) => {
@@ -27,8 +27,8 @@ export default function LanguageControl() {
       value={language}
       onChange={handleChange}
     >
-      <MenuItem value={'EN'}>EN</MenuItem>
-      <MenuItem value={'RU'}>RU</MenuItem>
+      <MenuItem value={'en'}>EN</MenuItem>
+      <MenuItem value={'ru'}>RU</MenuItem>
     </Select>
   )
 }

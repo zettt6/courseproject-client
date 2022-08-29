@@ -1,16 +1,17 @@
-import { Box, Divider, Grid, Typography } from '@mui/material'
+import { Box, Divider, Grid, Paper, Typography } from '@mui/material'
 import React from 'react'
 
 export default function Comment({ author, text, id }) {
   return (
-    <Box key={id}>
-      <Grid container wrap='nowrap' spacing={1}>
-        <Grid textAlign='left' item xs zeroMinWidth>
-          <Typography sx={{ fontWeight: 'bold' }}>{author}</Typography>
-          <Typography>{text}</Typography>
+    <Paper sx={{ padding: '10px 20px', my: 0.5, backgroundColor: 'inherit' }}>
+      <Box key={id}>
+        <Grid container wrap='nowrap' spacing={1}>
+          <Grid textAlign='left' item xs zeroMinWidth>
+            <Typography sx={{ fontWeight: 'bold' }}>{author}</Typography>
+            <Typography>{text}</Typography>
+          </Grid>
         </Grid>
-      </Grid>
-      <Divider variant='fullWidth' sx={{ margin: '30px 0' }} />
-    </Box>
+      </Box>
+    </Paper>
   )
 }

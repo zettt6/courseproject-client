@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { AppBar, Box, Button, IconButton, Toolbar } from '@mui/material'
-import { AccountCircle, Logout, Settings } from '@mui/icons-material'
+import { AccountCircle, GroupOutlined, Home, Logout } from '@mui/icons-material'
 import { SearchAppBar } from './SearchAppBar'
 import { useNavigate } from 'react-router-dom'
 import AuthPopup from './AuthPopup'
@@ -16,23 +16,6 @@ export default function Navbar() {
 
   const navigate = useNavigate()
 
-  const goToProfilePage = () => {
-    navigate('/profile')
-  }
-
-  const goToMainPage = () => {
-    navigate('/')
-  }
-
-  const goToUsersPage = () => {
-    navigate('/users')
-  }
-
-  const logout = () => {
-    localStorage.removeItem('token')
-    appContext.setUserData(null)
-  }
-
   const toggleAuthPopup = () => {
     setAuthPopupIsOpen(!authPopupIsOpen)
   }
@@ -41,16 +24,14 @@ export default function Navbar() {
     setRegisterPopupIsOpen(!registerPopupIsOpen)
   }
 
+  const logout = () => {
+    localStorage.removeItem('token')
+    appContext.setUserData(null)
+  }
+
   return (
-    <AppBar position='static'>
+    <AppBar position='sticky'>
       <Toolbar sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Button
-          color='inherit'
-          onClick={goToMainPage}
-          sx={{ width: '140px', borderRadius: '20px' }}
-        >
-          collections
-        </Button>
         <Box
           sx={{
             display: {
@@ -62,39 +43,10 @@ export default function Navbar() {
           <SearchAppBar />
         </Box>
         <LanguageControl />
-        <ThemeControl />
-
         {appContext.userData ? (
-          <Box>
-            <IconButton
-              aria-controls='menu-appbar'
-              aria-haspopup='true'
-              onClick={goToProfilePage}
-              color='inherit'
-            >
-              <AccountCircle />
-            </IconButton>
-
-            {appContext.userData.role === 'ADMIN' && (
-              <IconButton
-                aria-controls='menu-appbar'
-                aria-haspopup='true'
-                onClick={goToUsersPage}
-                color='inherit'
-              >
-                <Settings />
-              </IconButton>
-            )}
-
-            <IconButton
-              aria-controls='menu-appbar'
-              aria-haspopup='true'
-              onClick={logout}
-              color='inherit'
-            >
-              <Logout />
-            </IconButton>
-          </Box>
+          <IconButton sx={{ ml: 2 }} onClick={logout}>
+            <Logout />
+          </IconButton>
         ) : (
           <Box>
             <Button onClick={toggleRegisterPopup} color='inherit'>
