@@ -31,7 +31,7 @@ export default function Popup({
     try {
       const response = await axios.post('/items', {
         title: values.title,
-        creatorId: appContext.userData._id,
+        creator: appContext.userData.username,
         collectionId: collectionId,
         tags: selectedTags,
       })
@@ -60,8 +60,6 @@ export default function Popup({
     e.target.value = ''
   }
 
-  console.log(tags)
-  console.log(selectedTags)
   return (
     <Dialog
       open={itemFormPopupIsOpen}

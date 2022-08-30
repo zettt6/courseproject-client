@@ -23,7 +23,6 @@ export default function CommentBox({ item, getItem }) {
         text: inputValue,
         itemId: itemId,
       })
-      console.log(response.data)
     } catch (e) {
       toast.error(e.response.data.message)
     }

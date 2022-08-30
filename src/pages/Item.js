@@ -3,7 +3,7 @@ import toast from 'react-hot-toast'
 import { useParams } from 'react-router-dom'
 import { Box } from '@mui/material'
 import axios from 'axios'
-import CommentBox from '../components/Item/CommentBox'
+import CommentBox from '../components/Items/CommentBox'
 
 export default function Item() {
   const [item, setItem] = useState([])
@@ -28,7 +28,7 @@ export default function Item() {
         width: '70vw',
         display: 'flex',
         flexDirection: 'column',
-        ml: '20vw'
+        ml: '20vw',
       }}
     >
       <CommentBox item={item} getItem={getItem} />

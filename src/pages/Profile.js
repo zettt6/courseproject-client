@@ -1,16 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Box } from '@mui/system'
+import {
+  Paper,
+  Toolbar,
+  Button,
+  styled,
+  CircularProgress,
+  Box,
+} from '@mui/material'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import CollectionCard from '../components/Collection/CollectionCard.js'
-import Popup from '../components/Collection/CollectionForm/Popup'
+import CollectionCard from '../components/Collections/CollectionCard.js'
+import Popup from '../components/Collections/CollectionForm/Popup'
 import { AppContext } from '../context'
-import { Paper, Toolbar, Button, styled, CircularProgress } from '@mui/material'
 
 export default function Profile() {
   const [collections, setCollections] = useState([])
   const [selectedCollections, setSelectedCollections] = useState([])
-  const [collectionIsChecked, setCollectionIsChecked] = useState(false)
   const [collectionFormPopupIsOpen, setCollectionFormPopupIsOpen] =
     useState(false)
   const [loading, setLoading] = useState(false)
@@ -26,7 +31,7 @@ export default function Profile() {
     try {
       const response = await axios.get('/collections', {
         params: {
-          creatorId: appContext.userData._id,
+          creator: appContext.userData.username,
         },
       })
       setCollections(response.data)
@@ -70,11 +75,23 @@ export default function Profile() {
     setCollectionFormPopupIsOpen(!collectionFormPopupIsOpen)
   }
 
+  const handleCollectionIsChecked = (e, collectionId, collectionIsChecked) => {
+    e.stopPropagation()
+    if (collectionIsChecked) {
+      let temp = [...collections]
+      temp.splice(collectionId, 1)
+      setSelectedCollections(temp)
+    } else {
+      let temp = [...collections]
+      temp.push(collectionId)
+      setSelectedCollections(temp)
+    }
+  }
+
   return (
     <Box
       sx={{
         width: '70vw',
-        // margin: '0 auto',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -90,7 +107,7 @@ export default function Profile() {
         }}
       >
         <StyledToolbar>
-          {collectionIsChecked && (
+          {!!selectedCollections.length && (
             <Button
               color='inherit'
               variant='contained'
@@ -133,8 +150,10 @@ export default function Profile() {
                 getCollections={getCollections}
                 setSelectedCollections={setSelectedCollections}
                 deleteCollections={deleteCollections}
-                collectionIsChecked={collectionIsChecked}
-                setCollectionIsChecked={setCollectionIsChecked}
+                handleCollectionIsChecked={handleCollectionIsChecked}
+                collectionIsChecked={
+                  !!selectedCollections.find((id) => id === collection._id)
+                }
               />
             ))}
           </Box>

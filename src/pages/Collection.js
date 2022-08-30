@@ -14,17 +14,18 @@ import {
 } from '@mui/x-data-grid'
 import toast from 'react-hot-toast'
 import axios from 'axios'
-import Popup from '../components/Item/ItemForm/Popup'
 import { AppContext } from '../context'
 import { useNavigate, useParams } from 'react-router-dom'
+import Popup from '../components/Items/ItemForm/Popup'
 
 export default function Collection() {
+  const [collection, setCollection] = useState(null)
   const [items, setItems] = useState([])
   const [selectedItems, setSelectedItems] = useState([])
   const [itemFormPopupIsOpen, setItemFormPopupIsOpen] = useState(false)
-  const [loading, setLoading] = useState(false)
   const [selectedCellParams, setSelectedCellParams] = useState(null)
   const [cellModesModel, setCellModesModel] = useState({})
+  const [loading, setLoading] = useState(false)
   const appContext = useContext(AppContext)
   const navigate = useNavigate()
   const { id } = useParams()
@@ -36,7 +37,8 @@ export default function Collection() {
 
   const getCollection = async () => {
     try {
-      await axios.get(`/collections/${id}`)
+      const response = await axios.get(`/collections/${id}`)
+      setCollection(response.data)
     } catch (e) {
       toast.error(e.response.data.message)
     }
@@ -168,8 +170,8 @@ export default function Collection() {
       <GridToolbarContainer sx={{ justifyContent: 'space-between', m: 1 }}>
         <Box>
           <GridToolbarFilterButton color='inherit' />
-
-          {appContext.userData && (
+          {(appContext.userData?.username === collection?.creator ||
+            appContext.userData?.role === 'ADMIN') && (
             <>
               <Button onClick={deleteItems} sx={{ mx: 1 }} color='inherit'>
                 delete
@@ -195,7 +197,8 @@ export default function Collection() {
           )}
         </Box>
         <Box>
-          {appContext.userData && (
+          {(appContext.userData?.username === collection?.creator ||
+            appContext.userData?.role === 'ADMIN') && (
             <>
               <Button
                 color='inherit'

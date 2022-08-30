@@ -24,13 +24,12 @@ export default function CollectionCard({
   subject,
   collectionId,
   image,
+  collectionIsChecked,
+  handleCollectionIsChecked,
   setSelectedCollections,
   deleteCollections,
-  collectionIsChecked,
-  setCollectionIsChecked,
 }) {
   const [likeIconIsChecked, setLikeIconIsChecked] = useState(false)
-
   const [editMode, setEditMode] = useState(false)
   const navigate = useNavigate()
   const appContext = useContext(AppContext)
@@ -49,19 +48,13 @@ export default function CollectionCard({
 
   const setLike = async () => {
     try {
-      const response = await axios.post('/user/like', {
+      await axios.post('/user/like', {
         userId: appContext.userData._id,
         collectionId: collectionId,
       })
     } catch (e) {
       toast.error(e.response.data.message)
     }
-  }
-
-  const handleCollectionIsChecked = (e) => {
-    e.stopPropagation()
-    setCollectionIsChecked(e.target.checked)
-    setSelectedCollections((collections) => [...collections, collectionId])
   }
 
   const goToCollectionPage = () => {
@@ -103,7 +96,13 @@ export default function CollectionCard({
               <Checkbox
                 edge='start'
                 checked={collectionIsChecked}
-                onClick={handleCollectionIsChecked}
+                onClick={(e) =>
+                  handleCollectionIsChecked(
+                    e,
+                    collectionId,
+                    collectionIsChecked
+                  )
+                }
               />
               <IconButton
                 edge='end'

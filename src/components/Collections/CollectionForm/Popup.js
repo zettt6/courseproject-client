@@ -40,8 +40,9 @@ export default function CollectionFormPopup({
           title: values.title,
           description: values.description,
           subject: values.subject,
-          creatorId: appContext.userData._id,
+          creator: appContext.userData.username,
           image: imageUrl,
+          // additionalField: additionalField,
         },
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -71,8 +72,8 @@ export default function CollectionFormPopup({
     setLoading(true)
     let uploadedImage
     if (values.image) uploadedImage = await uploadImage()
-    createCollection(values, uploadedImage?.secure_url)
-    await getCollections()
+    await createCollection(values, uploadedImage?.secure_url)
+    getCollections()
     setLoading(false)
     toggleCollectionFormPopup()
   }
