@@ -1,32 +1,30 @@
-import {
-  Box,
-  Button,
-  List,
-  ListItem,
-  MenuItem,
-  Pagination,
-  Paper,
-  Select,
-  Typography,
-} from '@mui/material'
-import { DataGrid } from '@mui/x-data-grid'
+import { Box, List, ListItem, Pagination, Typography } from '@mui/material'
+
 import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
+
 import CollectionCard from '../components/Collections/CollectionCard'
 import { AppContext } from '../context'
 
 export default function Main() {
   const [biggestCollections, setBiggestCollections] = useState([])
   const [lastAddedItems, setLastAddedItems] = useState([])
-  const [page, setPage] = useState(1)
-  const [count, setCount] = useState(5)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [count, setCount] = useState(0)
   const appContext = useContext(AppContext)
+
+  const { t } = useTranslation()
 
   useEffect(() => {
     getTheBiggestCollections()
     getLastAddedItems()
   }, [])
+
+  useEffect(() => {
+    getLastAddedItems()
+  }, [currentPage])
 
   const getTheBiggestCollections = async () => {
     try {
@@ -38,20 +36,22 @@ export default function Main() {
   }
 
   const getLastAddedItems = async () => {
-    // limit
-    // reload list
+    // save current page when page refresh
+
     try {
       const response = await axios.get(
-        `/items/latest?page=${page}&perPage=${count}`
+        `/items/latest?page=${currentPage}&perPage=${5}`
       )
       setLastAddedItems(response.data.docs)
+      setCurrentPage(response.data.page)
+      setCount(response.data.totalPages)
     } catch (e) {
       toast.error(e.response.data.message)
     }
   }
 
   const handleChangePage = (e, newPage) => {
-    setPage(newPage)
+    setCurrentPage(newPage)
   }
 
   return (
@@ -82,31 +82,47 @@ export default function Main() {
           />
         ))}
       </Box>
-      <Box>
-        <Typography variant='h6'>Last added items</Typography>
+      <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
+        <Typography variant='h6' color={'primary.contrasText'}>
+          {t('latest_added_collection_items')}
+        </Typography>
+
+        <Pagination
+          sx={{ my: 2 }}
+          count={count}
+          page={currentPage}
+          onChange={handleChangePage}
+        />
         <Box sx={{ width: '20vw' }}>
           {lastAddedItems.map((item) => {
             return (
-              <List
-                disablePadding
-                sx={{
-                  my: 1,
-                  backgroundColor: '#fff',
-                  borderRadius: '10px',
-                  overflowX: 'hidden',
-                }}
-                key={item._id}
-              >
-                <ListItem sx={{ p: 1 }}>name: {item.title}</ListItem>
-                <ListItem sx={{ p: 1 }}>
-                  collection: {item.collectionId}
-                </ListItem>
-                <ListItem sx={{ p: 1 }}>creator: {item.creator}</ListItem>
-              </List>
+              <>
+                <List
+                  disablePadding
+                  color={'primary.contrasText'}
+                  sx={{
+                    my: 1,
+                    backgroundColor:
+                      appContext.theme === 'light' ? '#f9f9f9' : '#4c4c4c',
+                    borderRadius: '10px',
+                    overflowX: 'hidden',
+                  }}
+                  key={item._id}
+                >
+                  <ListItem sx={{ p: 1 }}>
+                    {t('name')}: {item.title}
+                  </ListItem>
+                  <ListItem sx={{ p: 1 }}>
+                    {t('collection')}: {item.collectionId}
+                  </ListItem>
+                  <ListItem sx={{ p: 1 }}>
+                    {t('creator')}: {item.creator}
+                  </ListItem>
+                </List>
+              </>
             )
           })}
         </Box>
-        <Pagination count={count} page={page} onChange={handleChangePage} />
       </Box>
     </Box>
   )

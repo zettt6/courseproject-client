@@ -39,6 +39,7 @@ function App() {
           },
         })
         setUserData(response.data)
+        console.log(response.data)
       }
     } catch (e) {
       localStorage.removeItem('token')
@@ -54,13 +55,13 @@ function App() {
       background: {
         default: '#1a1a1a',
       },
-      primary: {
-        main: '#202020',
-        contrastText: '#c5c5c6',
-      },
-      secondary: {
-        main: '#fff',
-      },
+      // primary: {
+      //   main: '#202020',
+      //   contrastText: '#4c4c4c',
+      // },
+      // secondary: {
+      //   main: '#fff',
+      // },
     },
   })
 
@@ -72,7 +73,7 @@ function App() {
       },
       primary: {
         main: '#d3d3d3',
-        contrastText: '#666666',
+        // contrastText: '#888888',
       },
     },
   })

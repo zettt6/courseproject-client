@@ -7,12 +7,14 @@ import toast from 'react-hot-toast'
 import axios from 'axios'
 import { ReactComponent as block } from '../icons/block.svg'
 import { ReactComponent as unblock } from '../icons/unblock.svg'
+import { useTranslation } from 'react-i18next'
 
 export default function Users() {
   const [usersData, setUsersData] = useState([])
   const [selectedUsers, setSelectedUsers] = useState([])
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   useEffect(() => {
     getUsers()
@@ -148,10 +150,10 @@ export default function Users() {
   }
 
   const columns = [
-    { field: 'username', headerName: 'username', width: 200 },
-    { field: 'email', headerName: 'email', width: 200 },
-    { field: 'status', headerName: 'status', width: 200 },
-    { field: 'role', headerName: 'role', width: 200 },
+    { field: 'username', headerName: `${t('username')}`, width: 200 },
+    { field: 'email', headerName: `${t('email')}`, width: 200 },
+    { field: 'status', headerName: `${t('status')}`, width: 200 },
+    { field: 'role', headerName: `${t('role')}`, width: 200 },
   ]
 
   const GridToolBar = () => {
@@ -188,10 +190,10 @@ export default function Users() {
         </IconButton>
 
         <Button color='inherit' onClick={giveAdminRights}>
-          give admin rights
+          {t('give_admin_rights')}
         </Button>
         <Button color='inherit' onClick={revokeAdminRights}>
-          revoke admin rights
+          {t('revoke_admin_rights')}
         </Button>
       </GridToolbarContainer>
     )

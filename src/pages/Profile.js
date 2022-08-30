@@ -12,6 +12,7 @@ import toast from 'react-hot-toast'
 import CollectionCard from '../components/Collections/CollectionCard.js'
 import Popup from '../components/Collections/CollectionForm/Popup'
 import { AppContext } from '../context'
+import { useTranslation } from 'react-i18next'
 
 export default function Profile() {
   const [collections, setCollections] = useState([])
@@ -21,6 +22,7 @@ export default function Profile() {
   const [loading, setLoading] = useState(false)
 
   const appContext = useContext(AppContext)
+  const { t } = useTranslation()
 
   useEffect(() => {
     getCollections()
@@ -113,7 +115,7 @@ export default function Profile() {
               variant='contained'
               onClick={deleteCollections}
             >
-              delete
+              {t('delete')}
             </Button>
           )}
           <Button
@@ -121,7 +123,7 @@ export default function Profile() {
             color='inherit'
             onClick={toggleCollectionFormPopup}
           >
-            create collection
+            {t('create_collection')}
           </Button>
           <Popup
             collectionFormPopupIsOpen={collectionFormPopupIsOpen}
@@ -132,7 +134,7 @@ export default function Profile() {
 
         {!collections.length && (
           <Box textAlign={'center'} my={7}>
-            your collection's list is empty
+            {t('empty_list')}
           </Box>
         )}
         {loading ? (

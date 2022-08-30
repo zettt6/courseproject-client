@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react'
 import { AppBar, Box, Button, IconButton, Toolbar } from '@mui/material'
-import { AccountCircle, GroupOutlined, Home, Logout } from '@mui/icons-material'
+import { Logout } from '@mui/icons-material'
 import { SearchAppBar } from './SearchAppBar'
 import { useNavigate } from 'react-router-dom'
 import AuthPopup from './AuthPopup'
 import LanguageControl from './LanguageControl'
-import ThemeControl from './ThemeControl'
+
 import RegisterPopup from './RegisterPopup'
 import { AppContext } from '../../context'
 

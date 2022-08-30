@@ -26,11 +26,9 @@ export default function CollectionCard({
   image,
   collectionIsChecked,
   handleCollectionIsChecked,
-  setSelectedCollections,
-  deleteCollections,
 }) {
   const [likeIconIsChecked, setLikeIconIsChecked] = useState(false)
-  const [editMode, setEditMode] = useState(false)
+  // const [editMode, setEditMode] = useState(false)
   const navigate = useNavigate()
   const appContext = useContext(AppContext)
   const location = useLocation()
@@ -66,14 +64,14 @@ export default function CollectionCard({
     margin: '10px',
     padding: '12px',
     borderRadius: '20px',
-    backgroundColor: appContext.theme === 'light' ? '#d2d2d2' : '#4c4c4c',
+    backgroundColor: appContext.theme === 'light' ? '#f9f9f9' : '#4c4c4c',
+
     '&:hover': {
       cursor: 'pointer',
       boxShadow:
         appContext.theme === 'light'
           ? '1px 0px 14px 0px rgba(0,0,0,0.6)'
           : '1px 0px 14px 0px rgba(255,255,255,0.6)',
-      backgroundColor: appContext.theme === 'light' ? '#ffffff3b' : '#6b6b6b',
     },
     '&:hover .MuiCardHeader-root': {
       opacity: 1,
@@ -83,7 +81,7 @@ export default function CollectionCard({
   const editCollection = (e) => {
     // !
     e.stopPropagation()
-    setEditMode(true)
+    // setEditMode(true)
   }
 
   return (

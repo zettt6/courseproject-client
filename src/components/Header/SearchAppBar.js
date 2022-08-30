@@ -3,9 +3,11 @@ import { Box, InputBase } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import { styled } from '@mui/material/styles'
 import { AppContext } from '../../context'
+import { useTranslation } from 'react-i18next'
 
 export function SearchAppBar() {
   const appContext = useContext(AppContext)
+  const { t } = useTranslation()
 
   const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -51,7 +53,7 @@ export function SearchAppBar() {
           <SearchIcon />
         </SearchIconWrapper>
         <StyledInputBase
-          placeholder='Search…'
+          placeholder={`${t('search')}...`}
           inputProps={{ 'aria-label': 'search' }}
         />
       </Search>

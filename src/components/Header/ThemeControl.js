@@ -12,6 +12,7 @@ export default function ThemeControl() {
     const newTheme = appContext.theme === 'light' ? 'dark' : 'light'
     appContext.setTheme(newTheme)
     localStorage.setItem('theme', newTheme)
+
     const token = localStorage.getItem('token')
     if (token) {
       try {

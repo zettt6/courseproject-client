@@ -6,11 +6,14 @@ import Comment from './Comment'
 import { AppContext } from '../../context'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
+import capitalize from '../../utils/capitalize'
 
 export default function CommentBox({ item, getItem }) {
   const [inputValue, setInputValue] = useState('')
   const appContext = useContext(AppContext)
   const { itemId } = useParams()
+  const { t } = useTranslation()
 
   const handleInput = (e) => {
     setInputValue(e.target.value)
@@ -36,8 +39,7 @@ export default function CommentBox({ item, getItem }) {
     }
   }
 
-  if (!item.comments)
-    return <Box sx={{ my: 5 }}>still no comments, add the first</Box>
+  if (!item.comments) return <Box sx={{ my: 5 }}>{t('no_comments')}</Box>
 
   return (
     <Box
@@ -49,7 +51,7 @@ export default function CommentBox({ item, getItem }) {
       }}
     >
       <Typography variant='h6' sx={{ marginRight: 'auto', my: 5 }}>
-        Comments
+        {capitalize(`${t('comments')}`)}
       </Typography>
       {item.comments.map((comment) => {
         return (
@@ -67,7 +69,7 @@ export default function CommentBox({ item, getItem }) {
             value={inputValue}
             onKeyDown={keyPress}
             onChange={handleInput}
-            placeholder='Add a comment...'
+            placeholder={`${t('add_comment')}...`}
             variant='standard'
             fullWidth
           />
@@ -75,11 +77,11 @@ export default function CommentBox({ item, getItem }) {
           <Button
             variant='contained'
             color='inherit'
-            sx={{ width: '100px', my: 3 }}
+            sx={{ my: 3 }}
             endIcon={<SendIcon />}
             onClick={sendComment}
           >
-            Send
+            {t('send')}
           </Button>
         </Box>
       )}

@@ -9,22 +9,28 @@ import {
 } from '@mui/material'
 import { Box } from '@mui/system'
 import React, { useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import { AppContext } from '../context'
 import ThemeControl from './Header/ThemeControl'
+import capitalize from '../utils/capitalize'
 
 export default function Sidebar() {
   const appContext = useContext(AppContext)
+  const { t } = useTranslation()
 
   return (
     <Box>
-      <Box position='fixed'>
+      <Box
+        position='fixed'
+        color={appContext.theme === 'light' ? '#4c4c4c' : '#888888'}
+      >
         <List>
           <ListItem disablePadding>
             <ListItemButton component='a' href='/'>
               <ListItemIcon>
                 <Home />
               </ListItemIcon>
-              <ListItemText>Home page</ListItemText>
+              <ListItemText>{capitalize(`${t('home_page')}`)}</ListItemText>
             </ListItemButton>
           </ListItem>
           {appContext.userData && (
@@ -33,7 +39,9 @@ export default function Sidebar() {
                 <ListItemIcon>
                   <AccountCircle />
                 </ListItemIcon>
-                <ListItemText>My collections</ListItemText>
+                <ListItemText>
+                  {capitalize(`${t('my_collections')}`)}
+                </ListItemText>
               </ListItemButton>
             </ListItem>
           )}
@@ -43,7 +51,7 @@ export default function Sidebar() {
                 <ListItemIcon>
                   <GroupOutlined />
                 </ListItemIcon>
-                <ListItemText>Users</ListItemText>
+                <ListItemText>{capitalize(`${t('users')}`)}</ListItemText>
               </ListItemButton>
             </ListItem>
           )}

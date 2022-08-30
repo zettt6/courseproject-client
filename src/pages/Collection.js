@@ -17,6 +17,7 @@ import axios from 'axios'
 import { AppContext } from '../context'
 import { useNavigate, useParams } from 'react-router-dom'
 import Popup from '../components/Items/ItemForm/Popup'
+import { useTranslation } from 'react-i18next'
 
 export default function Collection() {
   const [collection, setCollection] = useState(null)
@@ -29,6 +30,7 @@ export default function Collection() {
   const appContext = useContext(AppContext)
   const navigate = useNavigate()
   const { id } = useParams()
+  const { t } = useTranslation()
 
   useEffect(() => {
     getCollection()
@@ -107,9 +109,9 @@ export default function Collection() {
   }
 
   const columns = [
-    { field: 'title', headerName: 'title', width: 200, editable: true },
-    { field: 'likes', headerName: 'likes', width: 200 },
-    { field: 'tags', headerName: 'tags', width: 200 },
+    { field: 'title', headerName: `${t('title')}`, width: 200, editable: true },
+    { field: 'likes', headerName: `${t('likes')}`, width: 200 },
+    { field: 'tags', headerName: `${t('tags')}`, width: 200 },
   ]
 
   function toggleItemFormPopup() {
@@ -174,7 +176,7 @@ export default function Collection() {
             appContext.userData?.role === 'ADMIN') && (
             <>
               <Button onClick={deleteItems} sx={{ mx: 1 }} color='inherit'>
-                delete
+                {t('delete')}
               </Button>
               <Button
                 onClick={handleSaveOrEdit}
@@ -183,7 +185,7 @@ export default function Collection() {
                 color='inherit'
                 sx={{ mx: 1 }}
               >
-                {cellMode === 'edit' ? 'Save' : 'Edit'}
+                {cellMode === 'edit' ? `${t('save')}` : `${t('edit')}`}
               </Button>
               <Button
                 onClick={handleCancel}
@@ -191,7 +193,7 @@ export default function Collection() {
                 disabled={cellMode === 'view'}
                 color='inherit'
               >
-                Cancel
+                {t('cancel')}
               </Button>
             </>
           )}
@@ -205,7 +207,7 @@ export default function Collection() {
                 sx={{ mx: 1 }}
                 onClick={toggleItemFormPopup}
               >
-                Create new item
+                {t('create_new_item')}
               </Button>
               <Popup
                 itemFormPopupIsOpen={itemFormPopupIsOpen}
