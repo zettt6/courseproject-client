@@ -39,6 +39,7 @@ export default function LanguageControl() {
           }
         )
       } catch (e) {
+        console.log(e)
         toast.error(e.response.data.message)
       }
     }

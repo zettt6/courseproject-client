@@ -39,29 +39,22 @@ export default function CommentBox({ item, getItem }) {
     }
   }
 
-  if (!item.comments) return <Box sx={{ my: 5 }}>{t('no_comments')}</Box>
-
   return (
     <Box
       sx={{
-        width: '60vw',
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
         mt: 5,
       }}
     >
-      <Typography variant='h6' sx={{ marginRight: 'auto', my: 5 }}>
-        {capitalize(`${t('comments')}`)}
-      </Typography>
-      {item.comments.map((comment) => {
-        return (
-          <Comment
-            key={comment._id}
-            author={comment.author}
-            text={comment.text}
-          />
-        )
-      })}
+      {!!item.comments.length ? (
+        <Typography variant='h6' sx={{ marginRight: 'auto', my: 5 }}>
+          {capitalize(`${t('comments')}`)}
+        </Typography>
+      ) : (
+        <Box sx={{ my: 5 }}>{capitalize(`${t('no_comments')}`)}</Box>
+      )}
 
       {appContext.userData && (
         <Box mt={5}>
@@ -85,6 +78,16 @@ export default function CommentBox({ item, getItem }) {
           </Button>
         </Box>
       )}
+
+      {item.comments.map((comment) => {
+        return (
+          <Comment
+            key={comment._id}
+            author={comment.author}
+            text={comment.text}
+          />
+        )
+      })}
     </Box>
   )
 }

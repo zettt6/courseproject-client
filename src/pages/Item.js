@@ -1,22 +1,31 @@
 import React, { useContext, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { useLocation, useParams } from 'react-router-dom'
-import { Box, Checkbox, CircularProgress, Typography } from '@mui/material'
+import { useParams } from 'react-router-dom'
+import {
+  Box,
+  Checkbox,
+  CircularProgress,
+  List,
+  ListItem,
+  Paper,
+  Typography,
+} from '@mui/material'
 import axios from 'axios'
 import CommentBox from '../components/Items/CommentBox'
 import { Favorite, FavoriteBorder } from '@mui/icons-material'
 import { AppContext } from '../context'
+import { useTranslation } from 'react-i18next'
 
 export default function Item() {
   const [likeIconIsChecked, setLikeIconIsChecked] = useState(false)
-  const [item, setItem] = useState([])
+  const [item, setItem] = useState(null)
   const { itemId } = useParams()
   const appContext = useContext(AppContext)
+  const { t } = useTranslation()
 
   useEffect(() => {
     getItem()
   }, [])
-  console.log(item)
 
   useEffect(() => {
     if (
@@ -53,29 +62,60 @@ export default function Item() {
     }
   }
 
+  if (!item) return <CircularProgress />
+
+  // likes no refresh
+
   return (
     <Box
       sx={{
         width: '70vw',
-        display: 'flex',
-        flexDirection: 'column',
         ml: '20vw',
       }}
     >
-      <Typography variant='h6'>{item.title}</Typography>
-
-      <Box>
-        {appContext.userData && (
-          <Checkbox
-            inputProps={{ 'aria-label': 'controlled' }}
-            icon={<FavoriteBorder />}
-            checkedIcon={<Favorite sx={{ color: '#696969' }} />}
-            checked={likeIconIsChecked}
-            onClick={handleLiked}
-          />
+      <Typography variant='h5' my={4}>
+        {item.title}
+      </Typography>
+      <Box sx={{ width: '40%' }}>
+        {item.additionalFields.length && (
+          <>
+            {item.additionalFields.map((field) => {
+              return (
+                <Paper
+                  disablePadding
+                  color={'primary.contrasText'}
+                  sx={{
+                    my: 1,
+                    backgroundColor:
+                      appContext.theme === 'light' ? '#f9f9f9' : '#4c4c4c',
+                    borderRadius: '10px',
+                  }}
+                >
+                  <Box sx={{ p: 1 }}>
+                    {field.name}: {field.value}
+                  </Box>
+                </Paper>
+              )
+            })}
+          </>
         )}
-        <CommentBox item={item} getItem={getItem} />
+        <Box display={'flex'} alignItems={'center'} justifyContent={'flex-end'}>
+          <Box>{item.likes}</Box>
+          <Box>
+            {appContext.userData && (
+              <Checkbox
+                inputProps={{ 'aria-label': 'controlled' }}
+                icon={<FavoriteBorder />}
+                checkedIcon={<Favorite sx={{ color: '#696969' }} />}
+                checked={likeIconIsChecked}
+                onClick={handleLiked}
+              />
+            )}
+          </Box>
+        </Box>
       </Box>
+
+      <CommentBox item={item} getItem={getItem} />
     </Box>
   )
 }

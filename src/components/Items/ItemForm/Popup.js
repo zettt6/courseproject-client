@@ -1,10 +1,8 @@
 import {
-  Autocomplete,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   Stack,
   TextField,
 } from '@mui/material'
@@ -15,7 +13,6 @@ import toast from 'react-hot-toast'
 import * as Yup from 'yup'
 import InputTag from '../InputTag'
 import { AppContext } from '../../../context'
-import capitalize from '../../../utils/capitalize'
 import { useTranslation } from 'react-i18next'
 
 export default function Popup({
@@ -24,8 +21,6 @@ export default function Popup({
   getItems,
   collectionId,
 }) {
-  const [tags, setTags] = useState([])
-  const [inputValue, setInputValue] = useState('')
   const [selectedTags, setSelectedTags] = useState('')
   const appContext = useContext(AppContext)
   const { t } = useTranslation()
@@ -55,14 +50,6 @@ export default function Popup({
     onSubmit,
   })
 
-  function handleKeyDown(e) {
-    if (e.key !== 'Enter') return
-    const value = e.target.value
-    if (!value.trim()) return
-    setTags([...tags, value])
-    e.target.value = ''
-  }
-
   return (
     <Dialog
       open={itemFormPopupIsOpen}
@@ -84,27 +71,7 @@ export default function Popup({
           sx={{ my: 2 }}
         />
         <Stack spacing={3}>
-          <Autocomplete
-            multiple
-            freeSolo
-            autoSelect
-            id='tags-outlined'
-            options={tags}
-            getOptionLabel={(option) => option}
-            filterSelectedOptions
-            onChange={(event, value) => setSelectedTags(value)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                placeholder={`${t('add_tag')}`}
-                onKeyDown={handleKeyDown}
-                onChange={({ target }) => {
-                  setInputValue(target.value)
-                }}
-                value={inputValue}
-              />
-            )}
-          />
+          <InputTag setSelectedTags={setSelectedTags} />
         </Stack>
       </DialogContent>
       <DialogActions>

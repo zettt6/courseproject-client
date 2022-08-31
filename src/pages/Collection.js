@@ -127,14 +127,26 @@ export default function Collection() {
   if (!collection) return <CircularProgress />
 
   const columns = [
-    { field: 'title', headerName: `${t('title')}`, width: 200, editable: true },
-    { field: 'likes', headerName: `${t('likes')}`, width: 200 },
-    { field: 'tags', headerName: `${t('tags')}`, width: 200 },
-    // {
-    //   field: `${collection.additionalFields}`,
-    //   headerName: 'additional',
-    //   width: 200,
-    // },
+    { field: 'title', headerName: `${t('title')}`, width: 120, editable: true },
+    { field: 'tags', headerName: `${t('tags')}`, width: 240 },
+
+    // !
+    {
+      field: 'name',
+      headerName: 'name',
+      width: 140,
+      valueGetter: (params) => {
+        return params.getValue(params.id, 'additionalFields')[0].name
+      },
+    },
+    {
+      field: 'value',
+      headerName: 'value',
+      width: 200,
+      valueGetter: (params) => {
+        return params.getValue(params.id, 'additionalFields')[0].value
+      },
+    },
   ]
 
   return (

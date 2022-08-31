@@ -45,6 +45,7 @@ export default function Main() {
       setCurrentPage(response.data.page)
       setCount(response.data.totalPages)
     } catch (e) {
+      console.log(e)
       toast.error(e.response.data.message)
     }
   }
@@ -56,9 +57,9 @@ export default function Main() {
   return (
     <Box
       sx={{
+        width: '70vw',
         display: 'flex',
         alignItems: 'flex-start',
-        justifyContent: 'space-around',
         my: 3,
         ml: '20vw',
       }}
@@ -86,12 +87,14 @@ export default function Main() {
           {capitalize(`${t('latest_added_collection_items')}`)}
         </Typography>
 
-        <Pagination
-          sx={{ my: 2 }}
-          count={count}
-          page={currentPage}
-          onChange={handleChangePage}
-        />
+        {count > 1 && (
+          <Pagination
+            my={2}
+            count={count}
+            page={currentPage}
+            onChange={handleChangePage}
+          />
+        )}
         <Box sx={{ width: '20vw' }}>
           {lastAddedItems.map((item) => {
             return (
@@ -106,7 +109,6 @@ export default function Main() {
                     borderRadius: '10px',
                     overflowX: 'hidden',
                   }}
-                  key={item._id}
                 >
                   <ListItem sx={{ p: 1 }}>
                     {t('name')}: {item.title}

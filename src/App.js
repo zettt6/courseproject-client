@@ -58,13 +58,13 @@ function App() {
       background: {
         default: '#1a1a1a',
       },
-      // primary: {
-      //   main: '#202020',
-      //   contrastText: '#4c4c4c',
-      // },
-      // secondary: {
-      //   main: '#fff',
-      // },
+      primary: {
+        main: '#202020',
+        contrastText: '#4c4c4c',
+      },
+      secondary: {
+        main: '#fff',
+      },
     },
   })
 
@@ -76,7 +76,7 @@ function App() {
       },
       primary: {
         main: '#d3d3d3',
-        // contrastText: '#888888',
+        contrastText: '#888888',
       },
     },
   })
