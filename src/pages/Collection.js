@@ -5,25 +5,20 @@ import React, {
   useMemo,
   useState,
 } from 'react'
-import { Button, Grid, Box } from '@mui/material'
-import {
-  DataGrid,
-  GridCellModes,
-  GridToolbarContainer,
-  GridToolbarFilterButton,
-} from '@mui/x-data-grid'
+import { CircularProgress, Grid } from '@mui/material'
+import { DataGrid } from '@mui/x-data-grid'
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import { AppContext } from '../context'
 import { useNavigate, useParams } from 'react-router-dom'
-import Popup from '../components/Items/ItemForm/Popup'
 import { useTranslation } from 'react-i18next'
+import GridToolBar from '../components/Items/GridToolBar'
 
 export default function Collection() {
   const [collection, setCollection] = useState(null)
   const [items, setItems] = useState([])
+  const [additionalFields, setAdditionalFields] = useState([])
   const [selectedItems, setSelectedItems] = useState([])
-  const [itemFormPopupIsOpen, setItemFormPopupIsOpen] = useState(false)
   const [selectedCellParams, setSelectedCellParams] = useState(null)
   const [cellModesModel, setCellModesModel] = useState({})
   const [loading, setLoading] = useState(false)
@@ -36,6 +31,12 @@ export default function Collection() {
     getCollection()
     getItems()
   }, [])
+
+  // useEffect(() => {
+  //   if (collection) {
+  //     setAdditionalFields(collection.additionalFields)
+  //   }
+  // }, [collection])
 
   const getCollection = async () => {
     try {
@@ -60,25 +61,6 @@ export default function Collection() {
       toast.error(e.response.data.message)
     }
     setLoading(false)
-  }
-
-  async function deleteItems() {
-    if (selectedItems.length) {
-      setLoading(true)
-      const token = localStorage.getItem('token')
-      let queryParams = ''
-      selectedItems.forEach((item) => (queryParams += `items[]=${item._id}&`))
-      try {
-        await axios.delete(`/items/delete?${queryParams}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-      } catch (e) {
-        toast.error(e.response.data.message)
-      }
-      getItems()
-    }
   }
 
   async function updateItem(updatedRow) {
@@ -106,120 +88,6 @@ export default function Collection() {
     const selectedIDs = new Set(id)
     const selectedRowData = items.filter((row) => selectedIDs.has(row._id))
     setSelectedItems(selectedRowData)
-  }
-
-  const columns = [
-    { field: 'title', headerName: `${t('title')}`, width: 200, editable: true },
-    { field: 'likes', headerName: `${t('likes')}`, width: 200 },
-    { field: 'tags', headerName: `${t('tags')}`, width: 200 },
-  ]
-
-  function toggleItemFormPopup() {
-    setItemFormPopupIsOpen(!itemFormPopupIsOpen)
-  }
-
-  const goToItemPage = (row) => {
-    navigate(`/collections/${id}/items/${row.id}`)
-  }
-
-  const GridToolBar = (props) => {
-    const { selectedCellParams, cellMode, cellModesModel, setCellModesModel } =
-      props
-
-    const handleSaveOrEdit = () => {
-      if (!selectedCellParams) {
-        return
-      }
-      const { id, field } = selectedCellParams
-      if (cellMode === 'edit') {
-        setCellModesModel({
-          ...cellModesModel,
-          [id]: {
-            ...cellModesModel[id],
-            [field]: { mode: GridCellModes.View },
-          },
-        })
-      } else {
-        setCellModesModel({
-          ...cellModesModel,
-          [id]: {
-            ...cellModesModel[id],
-            [field]: { mode: GridCellModes.Edit },
-          },
-        })
-      }
-    }
-
-    const handleCancel = () => {
-      if (!selectedCellParams) {
-        return
-      }
-      const { id, field } = selectedCellParams
-      setCellModesModel({
-        ...cellModesModel,
-        [id]: {
-          ...cellModesModel[id],
-          [field]: { mode: GridCellModes.View, ignoreModifications: true },
-        },
-      })
-    }
-
-    const handleMouseDown = (e) => {
-      e.preventDefault()
-    }
-
-    return (
-      <GridToolbarContainer sx={{ justifyContent: 'space-between', m: 1 }}>
-        <Box>
-          <GridToolbarFilterButton color='inherit' />
-          {(appContext.userData?.username === collection?.creator ||
-            appContext.userData?.role === 'ADMIN') && (
-            <>
-              <Button onClick={deleteItems} sx={{ mx: 1 }} color='inherit'>
-                {t('delete')}
-              </Button>
-              <Button
-                onClick={handleSaveOrEdit}
-                onMouseDown={handleMouseDown}
-                disabled={!selectedCellParams}
-                color='inherit'
-                sx={{ mx: 1 }}
-              >
-                {cellMode === 'edit' ? `${t('save')}` : `${t('edit')}`}
-              </Button>
-              <Button
-                onClick={handleCancel}
-                onMouseDown={handleMouseDown}
-                disabled={cellMode === 'view'}
-                color='inherit'
-              >
-                {t('cancel')}
-              </Button>
-            </>
-          )}
-        </Box>
-        <Box>
-          {(appContext.userData?.username === collection?.creator ||
-            appContext.userData?.role === 'ADMIN') && (
-            <>
-              <Button
-                color='inherit'
-                sx={{ mx: 1 }}
-                onClick={toggleItemFormPopup}
-              >
-                {t('create_new_item')}
-              </Button>
-              <Popup
-                itemFormPopupIsOpen={itemFormPopupIsOpen}
-                toggleItemFormPopup={toggleItemFormPopup}
-                getItems={getItems}
-                collectionId={id}
-              />
-            </>
-          )}
-        </Box>
-      </GridToolbarContainer>
-    )
   }
 
   const handleCellFocus = useCallback((event, params) => {
@@ -252,6 +120,23 @@ export default function Collection() {
     return updatedRow
   }
 
+  const goToItemPage = (row) => {
+    navigate(`/collections/${id}/items/${row.id}`)
+  }
+
+  if (!collection) return <CircularProgress />
+
+  const columns = [
+    { field: 'title', headerName: `${t('title')}`, width: 200, editable: true },
+    { field: 'likes', headerName: `${t('likes')}`, width: 200 },
+    { field: 'tags', headerName: `${t('tags')}`, width: 200 },
+    // {
+    //   field: `${collection.additionalFields}`,
+    //   headerName: 'additional',
+    //   width: 200,
+    // },
+  ]
+
   return (
     <Grid ml={'20vw'}>
       <DataGrid
@@ -280,6 +165,13 @@ export default function Collection() {
             setSelectedCellParams,
             cellModesModel,
             setCellModesModel,
+            additionalFields,
+            setAdditionalFields,
+            collection,
+            getItems,
+            id,
+            setLoading,
+            selectedItems,
           },
           cell: {
             onFocus: handleCellFocus,

@@ -8,6 +8,7 @@ import toast from 'react-hot-toast'
 
 export default function LanguageControl() {
   const [open, setOpen] = useState(false)
+
   const currentLanguage = cookies.get('i18next') || 'en'
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function LanguageControl() {
   return (
     <Select
       sx={{
-        m: 0.5,
+        m: 1,
         minWidth: '50px',
         color: '#888888',
       }}

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 import CollectionCard from '../components/Collections/CollectionCard'
 import { AppContext } from '../context'
+import capitalize from '../utils/capitalize'
 
 export default function Main() {
   const [biggestCollections, setBiggestCollections] = useState([])
@@ -36,8 +37,6 @@ export default function Main() {
   }
 
   const getLastAddedItems = async () => {
-    // save current page when page refresh
-
     try {
       const response = await axios.get(
         `/items/latest?page=${currentPage}&perPage=${5}`
@@ -57,9 +56,9 @@ export default function Main() {
   return (
     <Box
       sx={{
-        width: '70vw',
         display: 'flex',
         alignItems: 'flex-start',
+        justifyContent: 'space-around',
         my: 3,
         ml: '20vw',
       }}
@@ -82,9 +81,9 @@ export default function Main() {
           />
         ))}
       </Box>
-      <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
+      <Box>
         <Typography variant='h6' color={'primary.contrasText'}>
-          {t('latest_added_collection_items')}
+          {capitalize(`${t('latest_added_collection_items')}`)}
         </Typography>
 
         <Pagination

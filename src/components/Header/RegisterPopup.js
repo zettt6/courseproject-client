@@ -14,12 +14,15 @@ import * as Yup from 'yup'
 import { emailRegex } from '../../utils/validation'
 import axios from 'axios'
 import { AppContext } from '../../context'
+import { useTranslation } from 'react-i18next'
+import capitalize from '../../utils/capitalize'
 
 export default function RegisterPopup({
   registerPopupIsOpen,
   toggleRegisterPopup,
 }) {
   const appContext = useContext(AppContext)
+  const { t } = useTranslation()
 
   const onSubmit = async (values) => {
     try {
@@ -56,13 +59,13 @@ export default function RegisterPopup({
       onClose={toggleRegisterPopup}
       sx={{
         width: '520px',
-        height: '450px',
+        height: '500px',
         margin: '0 auto',
         padding: 3,
         borderRadius: '15px',
       }}
     >
-      <DialogTitle>Sign up</DialogTitle>
+      <DialogTitle>{capitalize(`${t('sing_up')}`)}</DialogTitle>
       <DialogContent>
         <TextField
           sx={{ my: 1 }}
@@ -70,10 +73,8 @@ export default function RegisterPopup({
           value={formik.values.username}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          label='Username'
-          placeholder='Enter username'
+          placeholder={`${t('username')}`}
           fullWidth
-          required
           error={!!formik.errors.username && !!formik.touched.username}
           helperText={!!formik.touched.username && formik.errors.username}
         />
@@ -83,11 +84,9 @@ export default function RegisterPopup({
           value={formik.values.email}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          label='Email'
-          placeholder='Enter email'
+          placeholder={`${t('email')}`}
           type='email'
           fullWidth
-          required
           error={!!formik.errors.email && !!formik.touched.email}
           helperText={!!formik.touched.email && formik.errors.email}
         />
@@ -97,11 +96,9 @@ export default function RegisterPopup({
           value={formik.values.password}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          label='Password'
-          placeholder='Enter password'
+          placeholder={`${t('password')}`}
           type='password'
           fullWidth
-          required
           error={!!formik.errors.password && !!formik.touched.password}
           helperText={!!formik.touched.password && formik.errors.password}
         />

@@ -15,6 +15,8 @@ import toast from 'react-hot-toast'
 import * as Yup from 'yup'
 import InputTag from '../InputTag'
 import { AppContext } from '../../../context'
+import capitalize from '../../../utils/capitalize'
+import { useTranslation } from 'react-i18next'
 
 export default function Popup({
   itemFormPopupIsOpen,
@@ -26,10 +28,11 @@ export default function Popup({
   const [inputValue, setInputValue] = useState('')
   const [selectedTags, setSelectedTags] = useState('')
   const appContext = useContext(AppContext)
+  const { t } = useTranslation()
 
   const onSubmit = async (values) => {
     try {
-      const response = await axios.post('/items', {
+      await axios.post('/items', {
         title: values.title,
         creator: appContext.userData.username,
         collectionId: collectionId,
@@ -72,12 +75,10 @@ export default function Popup({
         borderRadius: '15px',
       }}
     >
-      <DialogTitle>Create new item</DialogTitle>
       <DialogContent>
         <TextField
           name='title'
-          label='Title'
-          placeholder='Enter title'
+          placeholder={`${t('title')}`}
           value={formik.values.title}
           onChange={formik.handleChange}
           sx={{ my: 2 }}
@@ -95,7 +96,7 @@ export default function Popup({
             renderInput={(params) => (
               <TextField
                 {...params}
-                placeholder='add tag'
+                placeholder={`${t('add_tag')}`}
                 onKeyDown={handleKeyDown}
                 onChange={({ target }) => {
                   setInputValue(target.value)
@@ -112,7 +113,7 @@ export default function Popup({
           variant='outlined'
           onClick={formik.handleSubmit}
         >
-          Create
+          {t('create')}
         </Button>
       </DialogActions>
     </Dialog>

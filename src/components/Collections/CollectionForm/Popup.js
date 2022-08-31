@@ -5,7 +5,6 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
   IconButton,
 } from '@mui/material'
 import { Add } from '@mui/icons-material'
@@ -15,11 +14,12 @@ import { useFormik } from 'formik'
 import toast from 'react-hot-toast'
 import * as Yup from 'yup'
 import { AppContext } from '../../../context'
-
 import RequiredFieldForm from './RequiredFieldForm'
 import AdditionalFieldForm from './AdditionalFieldForm'
 import AdditionalFieldSelect from './AdditionalFieldSelect'
 import UploadImage from './UploadImage'
+import capitalize from '../../../utils/capitalize'
+import { t } from 'i18next'
 
 export default function CollectionFormPopup({
   collectionFormPopupIsOpen,
@@ -28,7 +28,7 @@ export default function CollectionFormPopup({
 }) {
   const [loading, setLoading] = useState(false)
   const [selectedField, setSelectedField] = useState('')
-  const [additionalField, setAdditionalField] = useState([])
+  const [additionalFields, setAdditionalFields] = useState([])
   const appContext = useContext(AppContext)
 
   const createCollection = async (values, imageUrl) => {
@@ -42,7 +42,7 @@ export default function CollectionFormPopup({
           subject: values.subject,
           creator: appContext.userData.username,
           image: imageUrl,
-          // additionalField: additionalField,
+          additionalFields: additionalFields,
         },
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -103,7 +103,7 @@ export default function CollectionFormPopup({
 
   const addFields = (e) => {
     let newField = { type: selectedField, name: '', value: '' }
-    setAdditionalField([...additionalField, newField])
+    setAdditionalFields([...additionalFields, newField])
   }
 
   return (
@@ -116,8 +116,7 @@ export default function CollectionFormPopup({
       }}
       maxWidth={'xl'}
     >
-      <DialogTitle>Create new collection</DialogTitle>
-      <DialogContent sx={{ width: '50vw' }}>
+      <DialogContent sx={{ width: 'max-content' }}>
         <Box>
           <RequiredFieldForm formik={formik} />
           <Box
@@ -125,14 +124,15 @@ export default function CollectionFormPopup({
             alignItems={'center'}
             alignContent={'center'}
             my={2}
+            p={1}
           >
-            <DialogContentText m={2}>
-              You can also add additional fields for items in this collection
+            <DialogContentText mr={2}>
+              {capitalize(`${t('add_additional_fields')}`)}
             </DialogContentText>
             <AdditionalFieldSelect
               selectedField={selectedField}
               setSelectedField={setSelectedField}
-              additionalField={additionalField}
+              additionalFields={additionalFields}
             />
             {selectedField && (
               <IconButton onClick={addFields} sx={{ mx: 1 }} aria-label='add'>
@@ -141,8 +141,8 @@ export default function CollectionFormPopup({
             )}
           </Box>
           <AdditionalFieldForm
-            additionalField={additionalField}
-            setAdditionalField={setAdditionalField}
+            additionalFields={additionalFields}
+            setAdditionalFields={setAdditionalFields}
           />
         </Box>
       </DialogContent>
@@ -151,10 +151,9 @@ export default function CollectionFormPopup({
         <LoadingButton
           loading={loading}
           variant='contained'
-          sx={{ width: '200px' }}
           onClick={formik.handleSubmit}
         >
-          create collection
+          {t('create')}
         </LoadingButton>
       </DialogActions>
     </Dialog>

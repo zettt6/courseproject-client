@@ -27,33 +27,10 @@ export default function CollectionCard({
   collectionIsChecked,
   handleCollectionIsChecked,
 }) {
-  const [likeIconIsChecked, setLikeIconIsChecked] = useState(false)
   // const [editMode, setEditMode] = useState(false)
   const navigate = useNavigate()
   const appContext = useContext(AppContext)
   const location = useLocation()
-
-  useEffect(() => {
-    if (appContext.userData && appContext.userData.likes.includes(collectionId))
-      setLikeIconIsChecked(true)
-  }, [])
-
-  const handleLiked = async (e) => {
-    e.stopPropagation()
-    setLikeIconIsChecked(e.target.checked)
-    await setLike()
-  }
-
-  const setLike = async () => {
-    try {
-      await axios.post('/user/like', {
-        userId: appContext.userData._id,
-        collectionId: collectionId,
-      })
-    } catch (e) {
-      toast.error(e.response.data.message)
-    }
-  }
 
   const goToCollectionPage = () => {
     navigate(`/collections/${collectionId}`)
@@ -131,19 +108,6 @@ export default function CollectionCard({
         <Typography variant='body3'>{subject}</Typography>
         <Typography variant='body2'>{description}</Typography>
       </CardContent>
-      {appContext.userData && location.pathname !== '/profile' && (
-        <CardActions>
-          <Checkbox
-            edge='end'
-            sx={{ marginLeft: 'auto' }}
-            inputProps={{ 'aria-label': 'controlled' }}
-            icon={<FavoriteBorder />}
-            checkedIcon={<Favorite sx={{ color: '#696969' }} />}
-            checked={likeIconIsChecked}
-            onClick={handleLiked}
-          />
-        </CardActions>
-      )}
     </StyledCard>
   )
 }

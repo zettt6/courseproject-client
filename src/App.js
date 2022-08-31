@@ -13,13 +13,11 @@ import Users from './pages/Users'
 import axios from 'axios'
 import Item from './pages/Item'
 import Sidebar from './components/Sidebar'
-
-// search/tags/comments/likes/localization/collection and item create(fields?)
+import i18next from 'i18next'
 
 function App() {
   const [userData, setUserData] = useState(null)
   const [theme, setTheme] = useState('light')
-
   const [initialized, setInitialized] = useState(false)
 
   useEffect(() => {
@@ -28,6 +26,12 @@ function App() {
       setTheme(localStorage.getItem('theme'))
     }
   }, [])
+
+  useEffect(() => {
+    if (userData && userData.language) {
+      i18next.changeLanguage(userData.language)
+    }
+  }, [userData])
 
   const checkAuth = async () => {
     try {
@@ -39,7 +43,6 @@ function App() {
           },
         })
         setUserData(response.data)
-        console.log(response.data)
       }
     } catch (e) {
       localStorage.removeItem('token')

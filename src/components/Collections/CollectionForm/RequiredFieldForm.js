@@ -1,13 +1,15 @@
 import { TextField } from '@mui/material'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 export default function RequiredFields({ formik }) {
+  const { t } = useTranslation()
+
   return (
-    <div>
+    <>
       <TextField
         name='title'
-        label='Title'
-        placeholder='Enter title'
+        placeholder={`${t('title')}`}
         value={formik.values.title}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
@@ -16,9 +18,10 @@ export default function RequiredFields({ formik }) {
         sx={{ m: 1 }}
       />
       <TextField
+        multiline
+        rows={2}
         name='description'
-        label='Description'
-        placeholder='Enter description'
+        placeholder={`${t('description')}`}
         value={formik.values.description}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
@@ -28,8 +31,7 @@ export default function RequiredFields({ formik }) {
       />
       <TextField
         name='subject'
-        label='Subject'
-        placeholder='Enter subject'
+        placeholder={`${t('subject')}`}
         value={formik.values.subject}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
@@ -37,7 +39,7 @@ export default function RequiredFields({ formik }) {
         helperText={!!formik.touched.subject && formik.errors.subject}
         sx={{ m: 1 }}
       />
-    </div>
+    </>
   )
 }
 

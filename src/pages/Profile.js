@@ -118,12 +118,8 @@ export default function Profile() {
               {t('delete')}
             </Button>
           )}
-          <Button
-            sx={{ mx: 2 }}
-            color='inherit'
-            onClick={toggleCollectionFormPopup}
-          >
-            {t('create_collection')}
+          <Button color='inherit' onClick={toggleCollectionFormPopup}>
+            {t('create')}
           </Button>
           <Popup
             collectionFormPopupIsOpen={collectionFormPopupIsOpen}

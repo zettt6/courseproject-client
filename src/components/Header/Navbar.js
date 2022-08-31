@@ -8,11 +8,13 @@ import LanguageControl from './LanguageControl'
 
 import RegisterPopup from './RegisterPopup'
 import { AppContext } from '../../context'
+import { useTranslation } from 'react-i18next'
 
 export default function Navbar() {
   const [authPopupIsOpen, setAuthPopupIsOpen] = useState(false)
   const [registerPopupIsOpen, setRegisterPopupIsOpen] = useState(false)
   const appContext = useContext(AppContext)
+  const { t } = useTranslation()
 
   const navigate = useNavigate()
 
@@ -50,7 +52,7 @@ export default function Navbar() {
         ) : (
           <Box>
             <Button onClick={toggleRegisterPopup} color='inherit'>
-              Sign up
+              {t('sign_up')}
             </Button>
             <Button
               onClick={toggleAuthPopup}
@@ -58,7 +60,7 @@ export default function Navbar() {
               sx={{ borderRadius: '20px', marginLeft: 1 }}
               color='inherit'
             >
-              Sign in
+              {t('sign_in')}
             </Button>
           </Box>
         )}
