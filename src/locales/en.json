@@ -30,12 +30,13 @@
   "add_tag": "add tag",
   "add_additional_fields": "you can also add additional fields for items in this collection",
   "description": "description",
-  "subject": "subject",
+  "topic": "topic",
   "fields": "fields",
   "string": "string",
   "text": "text",
   "integer": "integer",
   "yes_no": "yes/no",
   "date": "date",
-  "upload_image": "upload image"
+  "upload_image": "upload image",
+  "collection_name": "collection name"
 }

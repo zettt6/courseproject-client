@@ -11,6 +11,7 @@ export default function LanguageControl() {
 
   const currentLanguage = cookies.get('i18next') || 'en'
 
+  // the choice is not saved
   useEffect(() => {
     changeLanguage()
   }, [currentLanguage])
@@ -39,7 +40,6 @@ export default function LanguageControl() {
           }
         )
       } catch (e) {
-        console.log(e)
         toast.error(e.response.data.message)
       }
     }

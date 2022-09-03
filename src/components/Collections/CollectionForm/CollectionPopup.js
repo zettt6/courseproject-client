@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
   Box,
   Dialog,
@@ -15,8 +15,8 @@ import toast from 'react-hot-toast'
 import * as Yup from 'yup'
 import { AppContext } from '../../../context'
 import RequiredFieldForm from './RequiredFieldForm'
-import AdditionalFieldForm from './AdditionalFieldForm'
-import AdditionalFieldSelect from './AdditionalFieldSelect'
+import CollectionAdditionalFieldForm from './CollectionAdditionalFieldForm'
+import CollectionAdditionalFieldSelect from './CollectionAdditionalFieldSelect'
 import UploadImage from './UploadImage'
 import capitalize from '../../../utils/capitalize'
 import { t } from 'i18next'
@@ -39,7 +39,7 @@ export default function CollectionFormPopup({
         {
           title: values.title,
           description: values.description,
-          subject: values.subject,
+          topic: values.topic,
           creator: appContext.userData.username,
           image: imageUrl,
           additionalFields: additionalFields,
@@ -82,13 +82,13 @@ export default function CollectionFormPopup({
     initialValues: {
       title: '',
       description: '',
-      subject: '',
+      topic: '',
       image: null,
     },
     validationSchema: Yup.object({
       title: Yup.string().required(),
       description: Yup.string().required(),
-      subject: Yup.string().required(),
+      topic: Yup.string().required(),
       fields: Yup.array().of(
         Yup.object().shape({
           name: Yup.string(),
@@ -129,7 +129,7 @@ export default function CollectionFormPopup({
             <DialogContentText mr={2}>
               {capitalize(`${t('add_additional_fields')}`)}
             </DialogContentText>
-            <AdditionalFieldSelect
+            <CollectionAdditionalFieldSelect
               selectedField={selectedField}
               setSelectedField={setSelectedField}
               additionalFields={additionalFields}
@@ -140,7 +140,7 @@ export default function CollectionFormPopup({
               </IconButton>
             )}
           </Box>
-          <AdditionalFieldForm
+          <CollectionAdditionalFieldForm
             additionalFields={additionalFields}
             setAdditionalFields={setAdditionalFields}
           />

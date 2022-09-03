@@ -28,7 +28,9 @@ export default function Sidebar() {
           <ListItem disablePadding>
             <ListItemButton component='a' href='/'>
               <ListItemIcon>
-                <Home />
+                <Home
+                  sx={{ color: appContext.theme === 'dark' && '#696969' }}
+                />
               </ListItemIcon>
               <ListItemText>{capitalize(`${t('home_page')}`)}</ListItemText>
             </ListItemButton>
@@ -37,7 +39,9 @@ export default function Sidebar() {
             <ListItem disablePadding>
               <ListItemButton component='a' href='/profile'>
                 <ListItemIcon>
-                  <AccountCircle />
+                  <AccountCircle
+                    sx={{ color: appContext.theme === 'dark' && '#696969' }}
+                  />
                 </ListItemIcon>
                 <ListItemText>
                   {capitalize(`${t('my_collections')}`)}

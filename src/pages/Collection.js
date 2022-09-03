@@ -12,11 +12,11 @@ import axios from 'axios'
 import { AppContext } from '../context'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import GridToolBar from '../components/Items/GridToolBar'
+import GridToolBar from '../components/Item/GridToolBar'
 
 export default function Collection() {
-  const [collection, setCollection] = useState(null)
-  const [items, setItems] = useState([])
+  const [collection, setCollection] = useState([])
+  const [item, setItem] = useState([])
   const [additionalFields, setAdditionalFields] = useState([])
   const [selectedItems, setSelectedItems] = useState([])
   const [selectedCellParams, setSelectedCellParams] = useState(null)
@@ -29,14 +29,8 @@ export default function Collection() {
 
   useEffect(() => {
     getCollection()
-    getItems()
+    getItem()
   }, [])
-
-  // useEffect(() => {
-  //   if (collection) {
-  //     setAdditionalFields(collection.additionalFields)
-  //   }
-  // }, [collection])
 
   const getCollection = async () => {
     try {
@@ -47,7 +41,7 @@ export default function Collection() {
     }
   }
 
-  const getItems = async () => {
+  const getItem = async () => {
     const token = localStorage.getItem('token')
     try {
       const response = await axios.get('/items', {
@@ -56,7 +50,7 @@ export default function Collection() {
           collectionId: id,
         },
       })
-      setItems(response.data)
+      setItem(response.data)
     } catch (e) {
       toast.error(e.response.data.message)
     }
@@ -81,12 +75,12 @@ export default function Collection() {
     } catch (e) {
       toast.error(e.response.data.message)
     }
-    getItems()
+    getItem()
   }
 
   const handleRowSelection = (id) => {
     const selectedIDs = new Set(id)
-    const selectedRowData = items.filter((row) => selectedIDs.has(row._id))
+    const selectedRowData = item.filter((row) => selectedIDs.has(row._id))
     setSelectedItems(selectedRowData)
   }
 
@@ -124,32 +118,39 @@ export default function Collection() {
     navigate(`/collections/${id}/items/${row.id}`)
   }
 
-  if (!collection) return <CircularProgress />
-
-  const columns = [
-    { field: 'title', headerName: `${t('title')}`, width: 120, editable: true },
-    { field: 'tags', headerName: `${t('tags')}`, width: 240 },
-
-    // !
-    {
-      field: 'name',
-      headerName: 'name',
-      width: 140,
-      valueGetter: (params) => {
-        return params.getValue(params.id, 'additionalFields')[0].name
+  const columns = useMemo(() => {
+    const baseColumns = [
+      {
+        field: 'title',
+        headerName: `${t('title')}`,
+        width: 120,
+        editable: true,
       },
-    },
-    {
-      field: 'value',
-      headerName: 'value',
-      width: 200,
-      valueGetter: (params) => {
-        return params.getValue(params.id, 'additionalFields')[0].value
-      },
-    },
-  ]
+      { field: 'tags', headerName: `${t('tags')}`, width: 240 },
+    ]
 
-  return (
+    const additionalColumns = collection?.additionalFields
+      ? collection?.additionalFields
+          ?.filter((f) => f.type !== 'checkbox' && f.type !== 'number')
+          .map((f) => ({
+            field: `additional-${f.name}`,
+            headerName: f.name,
+            width: 140,
+            valueGetter: (params) => {
+              return params
+                .getValue(params.id, 'additionalFields')
+                ?.find((field) => params.field === `additional-${field.name}`)
+                .value
+            },
+          }))
+      : []
+
+    return [...baseColumns]
+  }, [collection?.additionalFields])
+
+  return !!collection.length ? (
+    <CircularProgress />
+  ) : (
     <Grid ml={'20vw'}>
       <DataGrid
         onRowDoubleClick={goToItemPage}
@@ -158,12 +159,14 @@ export default function Collection() {
           Toolbar: GridToolBar,
         }}
         sx={{
-          height: '60vh',
+          height: '70vh',
           width: '70vw',
           boxShadow: '0px 0px 12px 1px rgb(0,0,0,0.4)',
           my: 4,
+          backgroundColor: appContext.theme === 'light' ? '#f9f9f9' : '#4c4c4c',
+          color: appContext.theme === 'light' ? '#4c4c4c' : '#000000',
         }}
-        rows={items}
+        rows={item}
         getRowId={(row) => row._id}
         columns={columns}
         pageSize={10}
@@ -180,7 +183,7 @@ export default function Collection() {
             additionalFields,
             setAdditionalFields,
             collection,
-            getItems,
+            getItem,
             id,
             setLoading,
             selectedItems,

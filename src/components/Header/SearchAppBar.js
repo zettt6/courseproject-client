@@ -1,13 +1,24 @@
 import React, { useContext } from 'react'
-import { Box, InputBase } from '@mui/material'
+import { Box, Button, InputBase } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import { styled } from '@mui/material/styles'
 import { AppContext } from '../../context'
 import { useTranslation } from 'react-i18next'
+import axios from 'axios'
+import toast from 'react-hot-toast'
 
 export function SearchAppBar() {
   const appContext = useContext(AppContext)
   const { t } = useTranslation()
+
+  const itemSearch = async () => {
+    try {
+      const response = await axios.get(`/items/item-search`)
+      // console.log(response.data)
+    } catch (e) {
+      toast.error(e.response.data.message)
+    }
+  }
 
   const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -57,6 +68,9 @@ export function SearchAppBar() {
           inputProps={{ 'aria-label': 'search' }}
         />
       </Search>
+      <Button variant='contained' onClick={itemSearch}>
+        Search
+      </Button>
     </Box>
   )
 }

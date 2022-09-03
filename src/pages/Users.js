@@ -43,14 +43,14 @@ export default function Users() {
   }
 
   const columns = [
-    { field: 'username', headerName: `${t('username')}`, width: 200 },
-    { field: 'email', headerName: `${t('email')}`, width: 200 },
-    { field: 'status', headerName: `${t('status')}`, width: 200 },
-    { field: 'role', headerName: `${t('role')}`, width: 200 },
+    { field: 'username', headerName: `${t('username')}`, width: 220 },
+    { field: 'email', headerName: `${t('email')}`, width: 220 },
+    { field: 'status', headerName: `${t('status')}`, width: 220 },
+    { field: 'role', headerName: `${t('role')}`, width: 220 },
   ]
 
   return (
-    <Grid align='center'>
+    <Grid ml={'20vw'}>
       <DataGrid
         onSelectionModelChange={handleRowSelection}
         components={{
@@ -64,8 +64,8 @@ export default function Users() {
           },
         }}
         sx={{
-          height: '60vh',
-          width: '60vw',
+          height: '70vh',
+          width: '70vw',
           boxShadow: '0px 0px 12px 1px rgb(0,0,0,0.4)',
           my: 4,
         }}

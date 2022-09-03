@@ -1,4 +1,11 @@
-import { Box, List, ListItem, Pagination, Typography } from '@mui/material'
+import {
+  Box,
+  CircularProgress,
+  List,
+  ListItem,
+  Pagination,
+  Typography,
+} from '@mui/material'
 
 import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -12,8 +19,10 @@ import capitalize from '../utils/capitalize'
 export default function Main() {
   const [biggestCollections, setBiggestCollections] = useState([])
   const [lastAddedItems, setLastAddedItems] = useState([])
+  // const [collections, setCollections] = useState()
   const [currentPage, setCurrentPage] = useState(1)
   const [count, setCount] = useState(0)
+
   const appContext = useContext(AppContext)
 
   const { t } = useTranslation()
@@ -41,11 +50,11 @@ export default function Main() {
       const response = await axios.get(
         `/items/latest?page=${currentPage}&perPage=${5}`
       )
-      setLastAddedItems(response.data.docs)
-      setCurrentPage(response.data.page)
-      setCount(response.data.totalPages)
+      setLastAddedItems(response.data.items.docs)
+      setCurrentPage(response.data.items.page)
+      setCount(response.data.items.totalPages)
+      // setCollections(response.data.collections)
     } catch (e) {
-      console.log(e)
       toast.error(e.response.data.message)
     }
   }
@@ -54,10 +63,11 @@ export default function Main() {
     setCurrentPage(newPage)
   }
 
-  return (
+  return !lastAddedItems && !biggestCollections ? (
+    <CircularProgress />
+  ) : (
     <Box
       sx={{
-        width: '70vw',
         display: 'flex',
         alignItems: 'flex-start',
         my: 3,
@@ -67,6 +77,7 @@ export default function Main() {
       <Box
         sx={{
           display: 'flex',
+          width: '50vw',
           flexWrap: 'wrap',
         }}
       >
@@ -74,7 +85,7 @@ export default function Main() {
           <CollectionCard
             title={collection.title}
             description={collection.description}
-            subject={collection.subject}
+            topic={collection.topic}
             image={collection.image}
             key={collection._id}
             collectionId={collection._id}
@@ -83,7 +94,10 @@ export default function Main() {
         ))}
       </Box>
       <Box>
-        <Typography variant='h6' color={'primary.contrasText'}>
+        <Typography
+          variant='h6'
+          sx={{ color: appContext.theme === 'light' ? '#4c4c4c' : '#696969' }}
+        >
           {capitalize(`${t('latest_added_collection_items')}`)}
         </Typography>
 
@@ -95,32 +109,32 @@ export default function Main() {
             onChange={handleChangePage}
           />
         )}
+
         <Box sx={{ width: '20vw' }}>
           {lastAddedItems.map((item) => {
             return (
-              <>
-                <List
-                  disablePadding
-                  color={'primary.contrasText'}
-                  sx={{
-                    my: 1,
-                    backgroundColor:
-                      appContext.theme === 'light' ? '#f9f9f9' : '#4c4c4c',
-                    borderRadius: '10px',
-                    overflowX: 'hidden',
-                  }}
-                >
-                  <ListItem sx={{ p: 1 }}>
-                    {t('name')}: {item.title}
-                  </ListItem>
-                  <ListItem sx={{ p: 1 }}>
-                    {t('collection')}: {item.collectionId}
-                  </ListItem>
-                  <ListItem sx={{ p: 1 }}>
-                    {t('creator')}: {item.creator}
-                  </ListItem>
-                </List>
-              </>
+              <List
+                key={item._id}
+                disablePadding
+                color={'primary.contrasText'}
+                sx={{
+                  my: 1,
+                  backgroundColor:
+                    appContext.theme === 'light' ? '#f9f9f9' : '#4c4c4c',
+                  borderRadius: '10px',
+                  overflowX: 'hidden',
+                }}
+              >
+                <ListItem sx={{ p: 1 }}>
+                  {t('name')}: {item.title}
+                </ListItem>
+                <ListItem sx={{ p: 1 }}>
+                  {t('collection_name')}: {item.collectionName}
+                </ListItem>
+                <ListItem sx={{ p: 1 }}>
+                  {t('creator')}: {item.creator}
+                </ListItem>
+              </List>
             )
           })}
         </Box>

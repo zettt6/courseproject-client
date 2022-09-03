@@ -65,7 +65,6 @@ export default function RegisterPopup({
         borderRadius: '15px',
       }}
     >
-      <DialogTitle>{capitalize(`${t('sing_up')}`)}</DialogTitle>
       <DialogContent>
         <TextField
           sx={{ my: 1 }}

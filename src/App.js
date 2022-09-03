@@ -15,6 +15,8 @@ import Item from './pages/Item'
 import Sidebar from './components/Sidebar'
 import i18next from 'i18next'
 
+//  edit collection, search, tag cloud, likes, refresh comments when other user add comment, responsive
+
 function App() {
   const [userData, setUserData] = useState(null)
   const [theme, setTheme] = useState('light')
@@ -28,8 +30,8 @@ function App() {
   }, [])
 
   useEffect(() => {
-    if (userData && userData.language) {
-      i18next.changeLanguage(userData.language)
+    if (userData && userData.selectedLanguage) {
+      i18next.changeLanguage(userData.selectedLanguage)
     }
   }, [userData])
 

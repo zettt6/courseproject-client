@@ -10,16 +10,18 @@ import React, { useContext, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import { AppContext } from '../../context'
-import Popup from './ItemForm/Popup'
+import ItemPopup from './ItemForm/ItemPopup'
 
 export default function GridToolBar({
-  selectedCellParams,
   cellMode,
+  selectedCellParams,
+  setSelectedCellParams,
   cellModesModel,
   setCellModesModel,
+  additionalFields,
+  setAdditionalFields,
   collection,
-  deleteItems,
-  getItems,
+  getItem,
   id,
   setLoading,
   selectedItems,
@@ -89,7 +91,7 @@ export default function GridToolBar({
       } catch (e) {
         toast.error(e.response.data.message)
       }
-      getItems()
+      getItem()
     }
   }
 
@@ -134,11 +136,12 @@ export default function GridToolBar({
             >
               {t('create')}
             </Button>
-            <Popup
+            <ItemPopup
               itemFormPopupIsOpen={itemFormPopupIsOpen}
               toggleItemFormPopup={toggleItemFormPopup}
-              getItems={getItems}
+              getItem={getItem}
               collectionId={id}
+              collection={collection}
             />
           </>
         )}

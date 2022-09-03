@@ -5,7 +5,6 @@ import { SearchAppBar } from './SearchAppBar'
 import { useNavigate } from 'react-router-dom'
 import AuthPopup from './AuthPopup'
 import LanguageControl from './LanguageControl'
-
 import RegisterPopup from './RegisterPopup'
 import { AppContext } from '../../context'
 import { useTranslation } from 'react-i18next'
@@ -15,7 +14,6 @@ export default function Navbar() {
   const [registerPopupIsOpen, setRegisterPopupIsOpen] = useState(false)
   const appContext = useContext(AppContext)
   const { t } = useTranslation()
-
   const navigate = useNavigate()
 
   const toggleAuthPopup = () => {
@@ -47,7 +45,7 @@ export default function Navbar() {
         <LanguageControl />
         {appContext.userData ? (
           <IconButton sx={{ ml: 2 }} onClick={logout}>
-            <Logout />
+            <Logout sx={{ color: appContext.theme === 'dark' && '#696969' }} />
           </IconButton>
         ) : (
           <Box>

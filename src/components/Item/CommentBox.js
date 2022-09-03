@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, TextField, Typography, Box } from '@mui/material'
+import { Button, TextField, Typography, Box, Paper } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send'
 import Comment from './Comment'
 import { AppContext } from '../../context'
@@ -9,19 +9,37 @@ import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import capitalize from '../../utils/capitalize'
 
-export default function CommentBox({ item, getItem }) {
+export default function CommentBox() {
+  const [comments, setComments] = useState([])
   const [inputValue, setInputValue] = useState('')
   const appContext = useContext(AppContext)
   const { itemId } = useParams()
   const { t } = useTranslation()
 
+  useEffect(() => {
+    getComments()
+  }, [])
+
   const handleInput = (e) => {
     setInputValue(e.target.value)
   }
 
+  const getComments = async () => {
+    try {
+      const response = await axios.get('/comments', {
+        headers: {
+          itemId: itemId,
+        },
+      })
+      setComments(response.data)
+    } catch (e) {
+      toast.error(e.response.data.message)
+    }
+  }
+
   const sendComment = async () => {
     try {
-      const response = await axios.put('/items/comments', {
+      const response = await axios.post('/comments/add', {
         author: appContext.userData.username,
         text: inputValue,
         itemId: itemId,
@@ -30,7 +48,7 @@ export default function CommentBox({ item, getItem }) {
       toast.error(e.response.data.message)
     }
     setInputValue('')
-    getItem()
+    getComments()
   }
 
   const keyPress = (e) => {
@@ -45,11 +63,19 @@ export default function CommentBox({ item, getItem }) {
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        mt: 5,
+        my: 5,
+        p: 3,
+        color: appContext.theme === 'light' ? '#4c4c4c' : '#868686',
       }}
     >
-      {!!item.comments.length ? (
-        <Typography variant='h6' sx={{ marginRight: 'auto', my: 5 }}>
+      {!!comments.length ? (
+        <Typography
+          variant='h6'
+          sx={{
+            marginRight: 'auto',
+            my: 3,
+          }}
+        >
           {capitalize(`${t('comments')}`)}
         </Typography>
       ) : (
@@ -70,7 +96,16 @@ export default function CommentBox({ item, getItem }) {
           <Button
             variant='contained'
             color='inherit'
-            sx={{ my: 3 }}
+            sx={{
+              my: 3,
+              backgroundColor:
+                appContext.theme === 'light' ? '#f9f9f9' : '#4c4c4c',
+              color: appContext.theme === 'light' ? '#4c4c4c' : '#000000',
+              '&:hover': {
+                backgroundColor:
+                  appContext.theme === 'light' ? '#f9f9f9' : '#868686',
+              },
+            }}
             endIcon={<SendIcon />}
             onClick={sendComment}
           >
@@ -79,7 +114,7 @@ export default function CommentBox({ item, getItem }) {
         </Box>
       )}
 
-      {item.comments.map((comment) => {
+      {comments?.map((comment) => {
         return (
           <Comment
             key={comment._id}

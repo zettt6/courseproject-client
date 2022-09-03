@@ -46,7 +46,6 @@ export default function InputTag({ setSelectedTags }) {
         options={tags}
         getOptionLabel={(option) => option}
         filterSelectedOptions
-        // onBlur={get..}
         onChange={(e, value) => setSelectedTags(value)}
         renderInput={(params) => (
           <TextField

@@ -21,11 +21,11 @@ import noimg from '../../icons/noimg.svg'
 export default function CollectionCard({
   title,
   description,
-  subject,
+  topic,
   collectionId,
   image,
   collectionIsChecked,
-  handleCollectionIsChecked,
+  collectionChecked,
 }) {
   // const [editMode, setEditMode] = useState(false)
   const navigate = useNavigate()
@@ -72,11 +72,7 @@ export default function CollectionCard({
                 edge='start'
                 checked={collectionIsChecked}
                 onClick={(e) =>
-                  handleCollectionIsChecked(
-                    e,
-                    collectionId,
-                    collectionIsChecked
-                  )
+                  collectionChecked(e, collectionId, collectionIsChecked)
                 }
               />
               <IconButton
@@ -105,7 +101,7 @@ export default function CollectionCard({
         <Typography gutterBottom variant='h5' component='div'>
           {title}
         </Typography>
-        <Typography variant='body3'>{subject}</Typography>
+        <Typography variant='body3'>{topic}</Typography>
         <Typography variant='body2'>{description}</Typography>
       </CardContent>
     </StyledCard>

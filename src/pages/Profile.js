@@ -10,12 +10,12 @@ import {
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import CollectionCard from '../components/Collections/CollectionCard.js'
-import Popup from '../components/Collections/CollectionForm/Popup'
+import CollectionPopup from '../components/Collections/CollectionForm/CollectionPopup'
 import { AppContext } from '../context'
 import { useTranslation } from 'react-i18next'
 
 export default function Profile() {
-  const [collections, setCollections] = useState([])
+  const [collections, setCollections] = useState(null)
   const [selectedCollections, setSelectedCollections] = useState([])
   const [collectionFormPopupIsOpen, setCollectionFormPopupIsOpen] =
     useState(false)
@@ -71,26 +71,32 @@ export default function Profile() {
     },
     justifyContent: 'flex-end',
     paddingBottom: '40px',
+    color: appContext.theme === 'light' ? '#4c4c4c' : '#696969',
   }))
 
   function toggleCollectionFormPopup() {
     setCollectionFormPopupIsOpen(!collectionFormPopupIsOpen)
   }
 
-  const handleCollectionIsChecked = (e, collectionId, collectionIsChecked) => {
+  const collectionChecked = (e, collectionId, collectionIsChecked) => {
     e.stopPropagation()
+
+    const temp = [...selectedCollections]
     if (collectionIsChecked) {
-      let temp = [...collections]
       temp.splice(collectionId, 1)
-      setSelectedCollections(temp)
     } else {
-      let temp = [...collections]
       temp.push(collectionId)
-      setSelectedCollections(temp)
     }
+    setSelectedCollections(temp)
   }
 
-  return (
+  const selectAllCollections = () => {
+    setSelectedCollections(collections.map((collection) => collection._id))
+  }
+
+  return !collections ? (
+    <CircularProgress />
+  ) : (
     <Box
       sx={{
         width: '70vw',
@@ -110,25 +116,35 @@ export default function Profile() {
       >
         <StyledToolbar>
           {!!selectedCollections.length && (
-            <Button
-              color='inherit'
-              variant='contained'
-              onClick={deleteCollections}
-            >
-              {t('delete')}
-            </Button>
+            <>
+              <Button
+                color='inherit'
+                variant='contained'
+                onClick={selectAllCollections}
+              >
+                select all
+              </Button>
+              <Button
+                color='inherit'
+                variant='contained'
+                onClick={deleteCollections}
+                sx={{ mx: 2 }}
+              >
+                {t('delete')}
+              </Button>
+            </>
           )}
           <Button color='inherit' onClick={toggleCollectionFormPopup}>
             {t('create')}
           </Button>
-          <Popup
+          <CollectionPopup
             collectionFormPopupIsOpen={collectionFormPopupIsOpen}
             toggleCollectionFormPopup={toggleCollectionFormPopup}
             getCollections={getCollections}
           />
         </StyledToolbar>
 
-        {!collections.length && (
+        {collections && !collections.length && (
           <Box textAlign={'center'} my={7}>
             {t('empty_list')}
           </Box>
@@ -141,14 +157,14 @@ export default function Profile() {
               <CollectionCard
                 title={collection.title}
                 description={collection.description}
-                subject={collection.subject}
+                topic={collection.topic}
                 image={collection.image}
                 key={collection._id}
                 collectionId={collection._id}
                 getCollections={getCollections}
                 setSelectedCollections={setSelectedCollections}
                 deleteCollections={deleteCollections}
-                handleCollectionIsChecked={handleCollectionIsChecked}
+                collectionChecked={collectionChecked}
                 collectionIsChecked={
                   !!selectedCollections.find((id) => id === collection._id)
                 }

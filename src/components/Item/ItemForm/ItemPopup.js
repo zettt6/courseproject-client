@@ -6,7 +6,7 @@ import {
   Stack,
   TextField,
 } from '@mui/material'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import axios from 'axios'
 import { useFormik } from 'formik'
 import toast from 'react-hot-toast'
@@ -14,12 +14,14 @@ import * as Yup from 'yup'
 import InputTag from '../InputTag'
 import { AppContext } from '../../../context'
 import { useTranslation } from 'react-i18next'
+import ItemAdditionalFieldForm from './ItemAdditionalFieldForm'
 
 export default function Popup({
   itemFormPopupIsOpen,
   toggleItemFormPopup,
-  getItems,
+  getItem,
   collectionId,
+  collection,
 }) {
   const [selectedTags, setSelectedTags] = useState('')
   const appContext = useContext(AppContext)
@@ -28,22 +30,32 @@ export default function Popup({
   const onSubmit = async (values) => {
     try {
       await axios.post('/items', {
-        title: values.title,
         creator: appContext.userData.username,
         collectionId: collectionId,
         tags: selectedTags,
+        fields: formik.values, // ?
       })
     } catch (e) {
       toast.error(e.response.data.message)
     }
-    getItems()
+    getItem()
     toggleItemFormPopup()
   }
 
-  const formik = useFormik({
-    initialValues: {
+  const initialValues = useMemo(() => {
+    const values = {
       title: '',
-    },
+    }
+
+    collection.additionalFields?.forEach((field) => {
+      values[field.name] = field.type === 'checkbox' ? false : ''
+    })
+
+    return values
+  }, [collection])
+
+  const formik = useFormik({
+    initialValues,
     validationSchema: Yup.object({
       title: Yup.string().required(),
     }),
@@ -55,21 +67,22 @@ export default function Popup({
       open={itemFormPopupIsOpen}
       onClose={toggleItemFormPopup}
       sx={{
-        width: '600px',
-        height: '450px',
         margin: '0 auto',
-        padding: 3,
         borderRadius: '15px',
+        p: 2,
       }}
+      maxWidth={'xl'}
     >
-      <DialogContent>
+      <DialogContent sx={{ width: 'max-content' }}>
         <TextField
           name='title'
           placeholder={`${t('title')}`}
           value={formik.values.title}
           onChange={formik.handleChange}
           sx={{ my: 2 }}
+          fullWidth
         />
+        <ItemAdditionalFieldForm formik={formik} collection={collection} />
         <Stack spacing={3}>
           <InputTag setSelectedTags={setSelectedTags} />
         </Stack>

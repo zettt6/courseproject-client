@@ -5,14 +5,17 @@ import {
   Box,
   Checkbox,
   CircularProgress,
-  List,
-  ListItem,
   Paper,
   Typography,
 } from '@mui/material'
 import axios from 'axios'
-import CommentBox from '../components/Items/CommentBox'
-import { Favorite, FavoriteBorder } from '@mui/icons-material'
+import CommentBox from '../components/Item/CommentBox'
+import {
+  CheckOutlined,
+  CloseOutlined,
+  Favorite,
+  FavoriteBorder,
+} from '@mui/icons-material'
 import { AppContext } from '../context'
 import { useTranslation } from 'react-i18next'
 
@@ -53,20 +56,19 @@ export default function Item() {
 
   const setLike = async () => {
     try {
-      await axios.post('/items/like', {
+      const response = await axios.post('/items/like', {
         userId: appContext.userData._id,
         itemId: itemId,
       })
+      console.log(response.data)
     } catch (e) {
       toast.error(e.response.data.message)
     }
   }
 
-  if (!item) return <CircularProgress />
-
-  // likes no refresh
-
-  return (
+  return !item ? (
+    <CircularProgress />
+  ) : (
     <Box
       sx={{
         width: '70vw',
@@ -76,29 +78,32 @@ export default function Item() {
       <Typography variant='h5' my={4}>
         {item.title}
       </Typography>
-      <Box sx={{ width: '40%' }}>
-        {item.additionalFields.length && (
-          <>
-            {item.additionalFields.map((field) => {
-              return (
-                <Paper
-                  disablePadding
-                  color={'primary.contrasText'}
-                  sx={{
-                    my: 1,
-                    backgroundColor:
-                      appContext.theme === 'light' ? '#f9f9f9' : '#4c4c4c',
-                    borderRadius: '10px',
-                  }}
-                >
-                  <Box sx={{ p: 1 }}>
-                    {field.name}: {field.value}
-                  </Box>
-                </Paper>
-              )
-            })}
-          </>
-        )}
+      <Box sx={{ width: '40%', marginLeft: 'auto' }}>
+        <Paper
+          key={Math.random()}
+          color={'primary.contrasText'}
+          sx={{
+            my: 1,
+            backgroundColor:
+              appContext.theme === 'light' ? '#f9f9f9' : '#4c4c4c',
+            borderRadius: '10px',
+          }}
+        >
+          <Box sx={{ p: 2 }}>
+            {Object.entries(item?.additionalFields)?.map(([key, value]) => (
+              <Box display={'flex'}>
+                {key}:
+                {typeof value === 'boolean' && value === true ? (
+                  <CheckOutlined />
+                ) : typeof value === 'boolean' && value === false ? (
+                  <CloseOutlined />
+                ) : (
+                  value
+                )}
+              </Box>
+            ))}
+          </Box>
+        </Paper>
         <Box display={'flex'} alignItems={'center'} justifyContent={'flex-end'}>
           <Box>{item.likes}</Box>
           <Box>
