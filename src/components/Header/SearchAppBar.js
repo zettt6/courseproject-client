@@ -21,7 +21,6 @@ export function SearchAppBar() {
   }
 
   const handleInputChange = (e) => {
-    console.log(e.target.value)
     setInputValue(e.target.value)
   }
 

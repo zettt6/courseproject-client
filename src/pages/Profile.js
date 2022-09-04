@@ -90,8 +90,12 @@ export default function Profile() {
     setSelectedCollections(temp)
   }
 
-  const selectAllCollections = () => {
+  const selectAll = () => {
     setSelectedCollections(collections.map((collection) => collection._id))
+  }
+
+  const clearAll = () => {
+    setSelectedCollections([])
   }
 
   return !collections ? (
@@ -117,18 +121,22 @@ export default function Profile() {
         <StyledToolbar>
           {!!selectedCollections.length && (
             <>
+              <Button color='inherit' variant='contained' onClick={selectAll}>
+                select all
+              </Button>
               <Button
                 color='inherit'
+                sx={{ mx: 2 }}
                 variant='contained'
-                onClick={selectAllCollections}
+                onClick={clearAll}
               >
-                select all
+                clear all
               </Button>
               <Button
                 color='inherit'
                 variant='contained'
                 onClick={deleteCollections}
-                sx={{ mx: 2 }}
+                sx={{ mx: 1 }}
               >
                 {t('delete')}
               </Button>
@@ -168,6 +176,7 @@ export default function Profile() {
                 collectionIsChecked={
                   !!selectedCollections.find((id) => id === collection._id)
                 }
+                collection={collection}
               />
             ))}
           </Box>

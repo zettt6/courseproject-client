@@ -1,12 +1,14 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Box,
+  Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
   IconButton,
+  Typography,
 } from '@mui/material'
 import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
@@ -14,36 +16,37 @@ import axios from 'axios'
 import { useFormik } from 'formik'
 import toast from 'react-hot-toast'
 import * as Yup from 'yup'
-import { AppContext } from '../../../context'
-import RequiredFieldForm from './RequiredFieldForm'
-import CollectionAdditionalFieldForm from './CollectionAdditionalFieldForm'
-import CollectionAdditionalFieldSelect from './CollectionAdditionalFieldSelect'
-import UploadImage from './UploadImage'
+import UploadImage from '../CollectionForm/UploadImage'
 import capitalize from '../../../utils/capitalize'
 import { t } from 'i18next'
+import EditCollectionForm from './EditCollectionForm'
+import EditCollectionSelect from './EditCollectionSelect'
+import noimg from '../../../icons/noimg.svg'
 
-export default function CollectionPopup({
-  collectionFormPopupIsOpen,
-  toggleCollectionFormPopup,
+export default function EditCollectionPopup({
+  editMode,
+  toggleEditMode,
   getCollections,
+  collection,
 }) {
   const [loading, setLoading] = useState(false)
+  const [additionalFields, setAdditionalFields] = useState([
+    ...collection.additionalFields,
+  ])
   const [selectedField, setSelectedField] = useState('')
-  const [additionalFields, setAdditionalFields] = useState([])
-  const appContext = useContext(AppContext)
 
-  const createCollection = async (values, imageUrl) => {
+  const updateCollection = async (values, imageUrl) => {
     const token = localStorage.getItem('token')
     try {
-      return axios.post(
-        '/collections',
+      return axios.put(
+        '/collections/update',
         {
-          title: values.title,
-          description: values.description,
-          topic: values.topic,
-          creator: appContext.userData.username,
-          image: imageUrl,
-          additionalFields: additionalFields,
+          collectionId: collection._id,
+          newTitle: values.title,
+          newDescription: values.description,
+          newTopic: values.topic,
+          newImage: imageUrl,
+          newAdditionalFields: additionalFields,
         },
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -73,18 +76,19 @@ export default function CollectionPopup({
     setLoading(true)
     let uploadedImage
     if (values.image) uploadedImage = await uploadImage()
-    await createCollection(values, uploadedImage?.secure_url)
+    await updateCollection(values, uploadedImage?.secure_url)
     getCollections()
     setLoading(false)
-    toggleCollectionFormPopup()
+    toggleEditMode()
   }
 
   const formik = useFormik({
     initialValues: {
-      title: '',
-      description: '',
-      topic: '',
-      image: null,
+      collectionId: collection._id,
+      title: collection.title,
+      description: collection.description,
+      topic: collection.topic,
+      image: collection.image,
     },
     validationSchema: Yup.object({
       title: Yup.string().required(),
@@ -102,52 +106,51 @@ export default function CollectionPopup({
 
   return (
     <Dialog
-      open={collectionFormPopupIsOpen}
-      onClose={toggleCollectionFormPopup}
+      open={editMode}
+      onClose={toggleEditMode}
       sx={{
-        margin: '0 auto',
-        borderRadius: '15px',
+        display: 'flex',
+        flexDirection: 'column',
       }}
-      maxWidth={'xl'}
     >
-      <DialogContent sx={{ width: 'max-content' }}>
-        <Box>
-          <RequiredFieldForm formik={formik} />
+      <DialogTitle mx={3}>{capitalize(`${t('edit_collection')}`)}</DialogTitle>
+      <DialogContent sx={{ display: 'flex' }}>
+        <Box display={'flex'} flexDirection={'column'} alignItems={'center'}>
           <Box
-            display={'flex'}
-            alignItems={'center'}
-            alignContent={'center'}
-            my={2}
-            p={1}
-          >
-            <DialogContentText mr={2}>
-              {capitalize(`${t('add_additional_fields')}`)}
-            </DialogContentText>
-            <CollectionAdditionalFieldSelect
-              selectedField={selectedField}
-              setSelectedField={setSelectedField}
-              additionalFields={additionalFields}
-            />
-            {selectedField && (
-              <IconButton onClick={addFields} sx={{ mx: 1 }} aria-label='add'>
-                <Add />
-              </IconButton>
-            )}
-          </Box>
-          <CollectionAdditionalFieldForm
-            additionalFields={additionalFields}
+            component='img'
+            sx={{
+              borderRadius: '10px',
+              mx: 3,
+            }}
+            height='300px'
+            width='200px'
+            src={collection.image ? collection.image : noimg}
+            alt='collection image'
+          />
+          <UploadImage formik={formik} />
+        </Box>
+        <Box display={'flex'} flexDirection={'column'}>
+          <EditCollectionForm
             setAdditionalFields={setAdditionalFields}
+            additionalFields={additionalFields}
+            collection={collection}
+            formik={formik}
+            selectedField={selectedField}
+            setSelectedField={setSelectedField}
+            addFields={addFields}
           />
         </Box>
       </DialogContent>
       <DialogActions>
-        <UploadImage formik={formik} />
+        <Button onClick={toggleEditMode} variant='contained'>
+          Cancel
+        </Button>
         <LoadingButton
           loading={loading}
           variant='contained'
           onClick={formik.handleSubmit}
         >
-          {t('create')}
+          {t('update')}
         </LoadingButton>
       </DialogActions>
     </Dialog>

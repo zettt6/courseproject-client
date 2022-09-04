@@ -28,13 +28,18 @@ export default function Popup({
   const { t } = useTranslation()
 
   const onSubmit = async (values) => {
+    const token = localStorage.getItem('token')
     try {
-      await axios.post('/items', {
-        creator: appContext.userData.username,
-        collectionId: collectionId,
-        tags: selectedTags,
-        fields: formik.values, // ?
-      })
+      await axios.post(
+        '/items',
+        {
+          creator: appContext.userData.username,
+          collectionId: collectionId,
+          tags: selectedTags,
+          fields: formik.values,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
     } catch (e) {
       toast.error(e.response.data.message)
     }

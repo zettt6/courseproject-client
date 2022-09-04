@@ -1,8 +1,7 @@
-import { Favorite, FavoriteBorder, ModeEditOutline } from '@mui/icons-material'
+import { ModeEditOutline } from '@mui/icons-material'
 import {
   Box,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
   CardMedia,
@@ -11,12 +10,11 @@ import {
   styled,
   Typography,
 } from '@mui/material'
-import axios from 'axios'
-import React, { useContext, useEffect, useState } from 'react'
-import toast from 'react-hot-toast'
+import React, { useContext, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AppContext } from '../../context'
 import noimg from '../../icons/noimg.svg'
+import EditCollectionPopup from './EditCollectionForm/EditCollectionPopup'
 
 export default function CollectionCard({
   title,
@@ -26,14 +24,20 @@ export default function CollectionCard({
   image,
   collectionIsChecked,
   collectionChecked,
+  collection,
+  getCollections,
 }) {
-  // const [editMode, setEditMode] = useState(false)
+  const [editMode, setEditMode] = useState(false)
   const navigate = useNavigate()
   const appContext = useContext(AppContext)
   const location = useLocation()
 
-  const goToCollectionPage = () => {
-    navigate(`/collections/${collectionId}`)
+  const goToCollectionPage = (e) => {
+    if (editMode) {
+      e.stopPropagation()
+    } else {
+      navigate(`/collections/${collectionId}`)
+    }
   }
 
   const StyledCard = styled(Card)(({ theme }) => ({
@@ -55,10 +59,9 @@ export default function CollectionCard({
     },
   }))
 
-  const editCollection = (e) => {
-    // !
+  const toggleEditMode = (e) => {
     e.stopPropagation()
-    // setEditMode(true)
+    setEditMode(!editMode)
   }
 
   return (
@@ -79,10 +82,16 @@ export default function CollectionCard({
                 edge='end'
                 aria-controls='menu-appbar'
                 aria-haspopup='true'
-                onClick={editCollection}
+                onClick={toggleEditMode}
               >
                 <ModeEditOutline />
               </IconButton>
+              <EditCollectionPopup
+                toggleEditMode={toggleEditMode}
+                editMode={editMode}
+                collection={collection}
+                getCollections={getCollections}
+              />
             </Box>
           }
         />

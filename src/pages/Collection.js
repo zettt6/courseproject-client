@@ -146,7 +146,7 @@ export default function Collection() {
   return !!collection.length ? (
     <CircularProgress />
   ) : (
-    <Grid ml={'20vw'}>
+    <Grid ml={'16vw'}>
       <DataGrid
         onRowDoubleClick={goToItemPage}
         onSelectionModelChange={handleRowSelection}

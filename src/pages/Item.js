@@ -41,14 +41,17 @@ export default function Item() {
   ) : (
     <Box
       sx={{
-        width: '70vw',
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'column',
+        width: '60vw',
         ml: '20vw',
       }}
     >
-      <Typography variant='h5' my={4}>
+      <Typography variant='h5' my={8}>
         {item.title}
       </Typography>
-      <Box sx={{ width: '40%', marginLeft: 'auto' }}>
+      <Box sx={{ width: '40%' }}>
         <ListOfAdditionalFields item={item} />
         <Likes
           item={item}

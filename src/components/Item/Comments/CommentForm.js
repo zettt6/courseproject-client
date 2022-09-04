@@ -12,12 +12,17 @@ export default function CommentForm({ itemId, getComments }) {
   const { t } = useTranslation()
 
   const sendComment = async () => {
+    const token = localStorage.getItem('token')
     try {
-      await axios.post('/comments/add', {
-        author: appContext.userData.username,
-        text: inputValue,
-        itemId: itemId,
-      })
+      await axios.post(
+        '/comments/add',
+        {
+          author: appContext.userData.username,
+          text: inputValue,
+          itemId: itemId,
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
     } catch (e) {
       toast.error(e.response.data.message)
     }

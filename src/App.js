@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ProtectedRoute } from './outlets/ProtectedRoute'
 import { AppContext } from './context'
-import { CssBaseline, ThemeProvider, createTheme, Box } from '@mui/material'
-
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
 import toast, { Toaster } from 'react-hot-toast'
 import Navbar from './components/Header/Navbar'
 import Collection from './pages/Collection'
@@ -15,7 +14,7 @@ import Item from './pages/Item'
 import Sidebar from './components/Sidebar'
 import i18next from 'i18next'
 
-//  edit collection, search, tag cloud, likes, refresh comments when other user add comment, responsive
+//  edit collection, edit new columns datagrid, search, tag cloud, markdown, refresh comments when other user add comment, responsive
 
 function App() {
   const [userData, setUserData] = useState(null)

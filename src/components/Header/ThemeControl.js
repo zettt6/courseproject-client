@@ -43,9 +43,9 @@ export default function ThemeControl() {
   return (
     <>
       {appContext.theme === 'dark' ? (
-        <ModeNight sx={{ color: '#696969' }} />
+        <ModeNight sx={{ color: '#868686' }} />
       ) : (
-        <LightMode sx={{ color: '#696969' }} />
+        <LightMode sx={{ color: '#868686' }} />
       )}
       <Switch
         sx={{ mx: 2.5 }}
