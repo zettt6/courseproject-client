@@ -15,11 +15,8 @@ import ItemPopup from './ItemForm/ItemPopup'
 export default function GridToolBar({
   cellMode,
   selectedCellParams,
-  setSelectedCellParams,
   cellModesModel,
   setCellModesModel,
-  additionalFields,
-  setAdditionalFields,
   collection,
   getItem,
   id,

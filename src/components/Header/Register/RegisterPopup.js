@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import {
-  TextField,
   Button,
   Dialog,
   DialogTitle,
@@ -11,11 +10,12 @@ import {
 import toast from 'react-hot-toast'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { emailRegex } from '../../utils/validation'
+import { emailRegex } from '../../../utils/validation'
 import axios from 'axios'
-import { AppContext } from '../../context'
+import { AppContext } from '../../../context'
+import RegisterForm from './RegisterForm'
+import capitalize from '../../../utils/capitalize'
 import { useTranslation } from 'react-i18next'
-import capitalize from '../../utils/capitalize'
 
 export default function RegisterPopup({
   registerPopupIsOpen,
@@ -65,42 +65,9 @@ export default function RegisterPopup({
         borderRadius: '15px',
       }}
     >
+      <DialogTitle>{capitalize(`${t('sign_up')}`)}</DialogTitle>
       <DialogContent>
-        <TextField
-          sx={{ my: 1 }}
-          name='username'
-          value={formik.values.username}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          placeholder={`${t('username')}`}
-          fullWidth
-          error={!!formik.errors.username && !!formik.touched.username}
-          helperText={!!formik.touched.username && formik.errors.username}
-        />
-        <TextField
-          sx={{ my: 1 }}
-          name='email'
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          placeholder={`${t('email')}`}
-          type='email'
-          fullWidth
-          error={!!formik.errors.email && !!formik.touched.email}
-          helperText={!!formik.touched.email && formik.errors.email}
-        />
-        <TextField
-          sx={{ my: 1 }}
-          name='password'
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          placeholder={`${t('password')}`}
-          type='password'
-          fullWidth
-          error={!!formik.errors.password && !!formik.touched.password}
-          helperText={!!formik.touched.password && formik.errors.password}
-        />
+        <RegisterForm formik={formik} />
       </DialogContent>
       <DialogActions>
         <Button

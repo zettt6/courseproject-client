@@ -6,25 +6,20 @@ import {
   Pagination,
   Typography,
 } from '@mui/material'
-
 import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
-
-import CollectionCard from '../components/Collections/CollectionCard'
+import CollectionCard from '../components/Collection/CollectionCard'
 import { AppContext } from '../context'
 import capitalize from '../utils/capitalize'
 
 export default function Main() {
   const [biggestCollections, setBiggestCollections] = useState([])
   const [lastAddedItems, setLastAddedItems] = useState([])
-  // const [collections, setCollections] = useState()
   const [currentPage, setCurrentPage] = useState(1)
   const [count, setCount] = useState(0)
-
   const appContext = useContext(AppContext)
-
   const { t } = useTranslation()
 
   useEffect(() => {
@@ -53,7 +48,6 @@ export default function Main() {
       setLastAddedItems(response.data.items.docs)
       setCurrentPage(response.data.items.page)
       setCount(response.data.items.totalPages)
-      // setCollections(response.data.collections)
     } catch (e) {
       toast.error(e.response.data.message)
     }

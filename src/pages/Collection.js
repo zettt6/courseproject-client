@@ -128,7 +128,6 @@ export default function Collection() {
       },
       { field: 'tags', headerName: `${t('tags')}`, width: 240 },
     ]
-
     const additionalColumns = collection?.additionalFields
       ? collection?.additionalFields
           ?.filter((f) => f.type !== 'checkbox' && f.type !== 'number')
@@ -137,15 +136,11 @@ export default function Collection() {
             headerName: f.name,
             width: 140,
             valueGetter: (params) => {
-              return params
-                .getValue(params.id, 'additionalFields')
-                ?.find((field) => params.field === `additional-${field.name}`)
-                .value
+              return params.getValue(params.id, 'additionalFields')[f.name]
             },
           }))
       : []
-
-    return [...baseColumns]
+    return [...baseColumns, ...additionalColumns]
   }, [collection?.additionalFields])
 
   return !!collection.length ? (

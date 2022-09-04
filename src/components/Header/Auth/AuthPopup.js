@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import {
-  TextField,
   Button,
   Dialog,
   DialogTitle,
@@ -10,11 +9,12 @@ import {
 import toast from 'react-hot-toast'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import { emailRegex } from '../../utils/validation'
+import { emailRegex } from '../../../utils/validation'
 import axios from 'axios'
-import { AppContext } from '../../context'
-import capitalize from '../../utils/capitalize'
+import { AppContext } from '../../../context'
+import capitalize from '../../../utils/capitalize'
 import { useTranslation } from 'react-i18next'
+import AuthForm from './AuthForm'
 
 export default function AuthPopup({ authPopupIsOpen, toggleAuthPopup }) {
   const appContext = useContext(AppContext)
@@ -60,30 +60,7 @@ export default function AuthPopup({ authPopupIsOpen, toggleAuthPopup }) {
     >
       <DialogTitle>{capitalize(`${t('sign_in')}`)}</DialogTitle>
       <DialogContent>
-        <TextField
-          sx={{ my: 1 }}
-          name='email'
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          placeholder={`${t('email')}`}
-          type='email'
-          fullWidth
-          error={!!formik.errors.email && !!formik.touched.email}
-          helperText={!!formik.touched.email && formik.errors.email}
-        />
-        <TextField
-          sx={{ my: 1 }}
-          name='password'
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          placeholder={`${t('password')}`}
-          type='password'
-          fullWidth
-          error={!!formik.errors.password && !!formik.touched.password}
-          helperText={!!formik.touched.password && formik.errors.password}
-        />
+        <AuthForm formik={formik} />
       </DialogContent>
       <DialogActions>
         <Button

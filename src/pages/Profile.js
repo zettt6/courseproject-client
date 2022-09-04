@@ -9,8 +9,8 @@ import {
 } from '@mui/material'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import CollectionCard from '../components/Collections/CollectionCard.js'
-import CollectionPopup from '../components/Collections/CollectionForm/CollectionPopup'
+import CollectionCard from '../components/Collection/CollectionCard.js'
+import CollectionPopup from '../components/Collection/CollectionForm/CollectionPopup'
 import { AppContext } from '../context'
 import { useTranslation } from 'react-i18next'
 

@@ -1,6 +1,6 @@
 import { Box, Grid, Paper, Typography } from '@mui/material'
 import React, { useContext } from 'react'
-import { AppContext } from '../../context'
+import { AppContext } from '../../../context'
 
 export default function Comment({ author, text }) {
   const appContext = useContext(AppContext)

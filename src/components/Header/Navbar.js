@@ -2,10 +2,9 @@ import React, { useContext, useState } from 'react'
 import { AppBar, Box, Button, IconButton, Toolbar } from '@mui/material'
 import { Logout } from '@mui/icons-material'
 import { SearchAppBar } from './SearchAppBar'
-import { useNavigate } from 'react-router-dom'
-import AuthPopup from './AuthPopup'
+import AuthPopup from './Auth/AuthPopup'
 import LanguageControl from './LanguageControl'
-import RegisterPopup from './RegisterPopup'
+import RegisterPopup from './Register/RegisterPopup'
 import { AppContext } from '../../context'
 import { useTranslation } from 'react-i18next'
 
@@ -14,7 +13,6 @@ export default function Navbar() {
   const [registerPopupIsOpen, setRegisterPopupIsOpen] = useState(false)
   const appContext = useContext(AppContext)
   const { t } = useTranslation()
-  const navigate = useNavigate()
 
   const toggleAuthPopup = () => {
     setAuthPopupIsOpen(!authPopupIsOpen)
