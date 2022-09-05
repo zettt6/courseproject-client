@@ -44,5 +44,6 @@
   "add_more": "add more",
   "clear_all": "clear all",
   "select_all": "select all",
-  "add_more_fields": "add more fields"
+  "add_more_fields": "add more fields",
+  "no_image_chosen": "no image chosen"
 }

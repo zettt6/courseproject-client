@@ -1,15 +1,16 @@
 import { FileDownload } from '@mui/icons-material'
 import { Button, styled } from '@mui/material'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppContext } from '../context'
 
-export const UploadImage = ({ formik }) => {
+export const UploadImage = ({ formik, setSelectedImage }) => {
   const { t } = useTranslation()
   const appContext = useContext(AppContext)
 
   const handleInput = (e) => {
     formik.setFieldValue('image', e.target.files[0])
+    setSelectedImage(URL.createObjectURL(e.target.files[0]))
   }
 
   const StyledButton = styled(Button)(({ theme }) => ({

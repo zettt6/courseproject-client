@@ -44,5 +44,6 @@
   "add_more": "добавить еще",
   "clear_all": "очистить выбор",
   "select_all": "выбрать все",
-  "add_more_fields": "добавить поля"
+  "add_more_fields": "добавить поля",
+  "no_image_chosen": "изображение не выбрано"
 }

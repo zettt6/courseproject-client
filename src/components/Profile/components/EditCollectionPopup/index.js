@@ -34,6 +34,7 @@ export const EditCollectionPopup = ({
     ...collection.additionalFields,
   ])
   const [selectedField, setSelectedField] = useState('')
+  const [selectedImage, setSelectedImage] = useState(null)
 
   const updateCollection = async (values, imageUrl) => {
     const token = localStorage.getItem('token')
@@ -149,10 +150,10 @@ export const EditCollectionPopup = ({
               }}
               height='400px'
               width='300px'
-              src={collection.image ? collection.image : noimg}
+              src={selectedImage ? selectedImage : collection.image}
               alt='collection image'
             />
-            <UploadImage formik={formik} />
+            <UploadImage formik={formik} setSelectedImage={setSelectedImage} />
           </Box>
           <Box display={'flex'} flexDirection={'column'}>
             <EditCollectionForm

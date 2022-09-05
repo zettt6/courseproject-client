@@ -7,6 +7,7 @@ import {
   DialogContentText,
   IconButton,
   styled,
+  Typography,
 } from '@mui/material'
 import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
@@ -29,6 +30,8 @@ export const CollectionPopup = ({
 }) => {
   const [loading, setLoading] = useState(false)
   const [selectedField, setSelectedField] = useState('')
+  const [selectedImage, setSelectedImage] = useState(null)
+
   const [additionalFields, setAdditionalFields] = useState([])
   const appContext = useContext(AppContext)
 
@@ -155,7 +158,22 @@ export const CollectionPopup = ({
           </Box>
         </DialogContent>
         <DialogActions>
-          <UploadImage formik={formik} />
+          {selectedImage ? (
+            <Box
+              component='img'
+              sx={{
+                borderRadius: '10px',
+                mx: 3,
+              }}
+              height='50px'
+              width='50px'
+              src={selectedImage}
+              alt='collection image'
+            />
+          ) : (
+            <Typography>{t('no_image_chosen')}</Typography>
+          )}
+          <UploadImage formik={formik} setSelectedImage={setSelectedImage} />
           <StyledLoadingButton
             loading={loading}
             variant='contained'
