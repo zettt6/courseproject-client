@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App'
+import { App } from './App'
 import './axios'
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
@@ -14,7 +14,7 @@ i18n
     supportedLngs: ['en', 'ru'],
     fallbackLng: 'en',
     detection: {
-      order: ['cookie', 'localStorage', 'htmlTag', 'path', 'subdomain'],
+      order: ['cookie'],
       caches: ['cookie'],
     },
     resources: {

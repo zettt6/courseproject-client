@@ -41,5 +41,8 @@
   "collection_name": "collection name",
   "update": "update",
   "edit_collection": "edit collection",
-  "add_more": "add more"
+  "add_more": "add more",
+  "clear_all": "clear all",
+  "select_all": "select all",
+  "add_more_fields": "add more fields"
 }

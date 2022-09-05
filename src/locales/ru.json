@@ -41,5 +41,8 @@
   "collection_name": "название коллекции",
   "update": "обновить",
   "edit_collection": "редактирование коллекции",
-  "add_more": "добавить еще"
+  "add_more": "добавить еще",
+  "clear_all": "очистить выбор",
+  "select_all": "выбрать все",
+  "add_more_fields": "добавить поля"
 }

@@ -3,20 +3,18 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ProtectedRoute } from './outlets/ProtectedRoute'
 import { AppContext } from './context'
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
-import toast, { Toaster } from 'react-hot-toast'
-import Navbar from './components/Header/Navbar'
-import Collection from './pages/Collection'
-import Main from './pages/Main'
-import Profile from './pages/Profile'
-import Users from './pages/Users'
+import { Header } from './components/Header'
+import { Collection } from './components/Collection'
+import { Main } from './components/Main'
+import { Profile } from './components/Profile'
+import { Users } from './components/Users'
 import axios from 'axios'
-import Item from './pages/Item'
-import Sidebar from './components/Sidebar'
+import { Item } from './components/Item'
+import { Sidebar } from './components/Sidebar'
 import i18next from 'i18next'
+import toast, { Toaster } from 'react-hot-toast'
 
-//  edit collection, edit new columns datagrid, search, tag cloud, markdown, refresh comments when other user add comment, responsive
-
-function App() {
+export const App = () => {
   const [userData, setUserData] = useState(null)
   const [theme, setTheme] = useState('light')
   const [initialized, setInitialized] = useState(false)
@@ -82,9 +80,11 @@ function App() {
     },
   })
 
-  if (!initialized) return ''
+  // if (!initialized) return ''
 
-  return (
+  return !initialized ? (
+    ''
+  ) : (
     <AppContext.Provider
       value={{
         userData,
@@ -100,7 +100,7 @@ function App() {
         />
         <BrowserRouter>
           <CssBaseline />
-          <Navbar />
+          <Header />
           <Sidebar />
           <Routes>
             <Route exact path='/' element={<Main />} />
@@ -135,5 +135,3 @@ function App() {
     </AppContext.Provider>
   )
 }
-
-export default App

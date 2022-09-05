@@ -11,10 +11,10 @@ import { Box } from '@mui/system'
 import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppContext } from '../context'
-import ThemeControl from './Header/ThemeControl'
-import capitalize from '../utils/capitalize'
+import { ThemeControl } from './Header/components/ThemeControl'
+import { capitalize } from '../utils/capitalize'
 
-export default function Sidebar({ isOpen, toggleDrawer }) {
+export const Sidebar = ({ isOpen, toggleDrawer }) => {
   const appContext = useContext(AppContext)
   const { t } = useTranslation()
 
@@ -50,7 +50,9 @@ export default function Sidebar({ isOpen, toggleDrawer }) {
           <ListItem disablePadding>
             <ListItemButton component='a' href='/users'>
               <ListItemIcon>
-                <GroupOutlined />
+                <GroupOutlined
+                  sx={{ color: appContext.theme === 'dark' && '#696969' }}
+                />
               </ListItemIcon>
               <ListItemText>{capitalize(`${t('users')}`)}</ListItemText>
             </ListItemButton>
