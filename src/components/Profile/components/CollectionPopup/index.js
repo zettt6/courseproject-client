@@ -28,12 +28,12 @@ export const CollectionPopup = ({
   toggleCollectionFormPopup,
   getCollections,
 }) => {
+  const appContext = useContext(AppContext)
+
   const [loading, setLoading] = useState(false)
   const [selectedField, setSelectedField] = useState('')
   const [selectedImage, setSelectedImage] = useState(null)
-
   const [additionalFields, setAdditionalFields] = useState([])
-  const appContext = useContext(AppContext)
 
   const createCollection = async (values, imageUrl) => {
     const token = localStorage.getItem('token')

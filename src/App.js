@@ -8,11 +8,11 @@ import { Collection } from './components/Collection'
 import { Main } from './components/Main'
 import { Profile } from './components/Profile'
 import { Users } from './components/Users'
-import axios from 'axios'
 import { Item } from './components/Item'
 import { Sidebar } from './components/Sidebar'
 import i18next from 'i18next'
 import toast, { Toaster } from 'react-hot-toast'
+import axios from 'axios'
 
 export const App = () => {
   const [userData, setUserData] = useState(null)
@@ -79,8 +79,6 @@ export const App = () => {
       },
     },
   })
-
-  // if (!initialized) return ''
 
   return !initialized ? (
     ''

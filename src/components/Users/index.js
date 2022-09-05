@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Grid } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
@@ -6,10 +6,12 @@ import { useTranslation } from 'react-i18next'
 import { GridToolBar } from './components/GridToolBar'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { AppContext } from '../../context'
 
 export const Users = () => {
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const appContext = useContext(AppContext)
 
   const [usersData, setUsersData] = useState([])
   const [selectedUsers, setSelectedUsers] = useState([])
@@ -66,6 +68,8 @@ export const Users = () => {
           height: '70vh',
           width: '70vw',
           boxShadow: '0px 0px 12px 1px rgb(0,0,0,0.4)',
+          backgroundColor: appContext.theme === 'light' ? '#f9f9f9' : '#4c4c4c',
+          color: appContext.theme === 'light' ? '#4c4c4c' : '#000000',
           my: 4,
         }}
         rowsPerPageOptions={[10]}
